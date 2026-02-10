@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Celebration - 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@1,400;1,700&family=Outfit:wght@100;300;600&family=Great+Vibes&display=swap');
+        
+        :root {
+            --gold: #d4af37;
+            --cream: #fffaf5;
+        }
+
+        body {
+            background-color: #fdf8f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .card-container {
+            width: 100%;
+            max-width: 420px;
+            aspect-ratio: 9/16;
+            background: var(--cream);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+            border: 8px solid white;
+        }
+
+        /* Delicate Background Accents */
+        .floral-accent {
+            position: absolute;
+            font-family: 'Great Vibes', cursive;
+            font-size: 8rem;
+            color: rgba(212, 175, 55, 0.05);
+            top: -20px;
+            right: -20px;
+            pointer-events: none;
+        }
+
+        .hero-image {
+            width: 100%;
+            height: 60%;
+            object-fit: cover;
+            mask-image: linear-gradient(to bottom, black 85%, transparent 100%);
+        }
+
+        .glass-overlay {
+            position: absolute;
+            top: 55%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 24px;
+            padding: 30px;
+            text-align: center;
+            z-index: 20;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
+
+        .name-callout {
+            font-family: 'Great Vibes', cursive;
+            font-size: 3.5rem;
+            color: var(--gold);
+            line-height: 1;
+            margin: 10px 0;
+        }
+
+        .serif-italic {
+            font-family: 'Bodoni Moda', serif;
+            font-style: italic;
+            letter-spacing: 0.05em;
+        }
+
+        .footer-note {
+            position: absolute;
+            bottom: 30px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.65rem;
+            letter-spacing: 0.4em;
+            color: #bc9c82;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="card-container">
+        <div class="floral-accent">Love</div>
+        
+        <img src="san.jpg" 
+             alt="Celebrant" 
+             class="hero-image">
+
+        <div class="glass-overlay">
+            <p class="text-[10px] tracking-[0.3em] uppercase text-stone-400 font-semibold">Celebrating You</p>
+            
+            <h1 class="name-callout">Sandie</h1>
+            
+            <p class="text-stone-600 text-xs leading-relaxed mt-4 px-2">
+                Your light makes every day brighter. May this year be filled with boundless joy, new adventures, and all the love you give so freely.
+            </p>
+
+            <div class="mt-6 pt-4 border-t border-stone-200">
+                <p class="serif-italic text-stone-500 text-sm italic">❤️🎂
+            </div>
+        </div>
+
+        <div class="footer-note">
+            Happy Birthday • 🎂✨️
+        </div>
+    </div>
+
+</body>
+</html>
