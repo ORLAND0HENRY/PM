@@ -77,7 +77,7 @@
     </div>
 
     <script>
-    var canvas = document.getElementById('posterCanvas');
+                var canvas = document.getElementById('posterCanvas');
     var ctx = canvas.getContext('2d');
     var fileInput = document.getElementById('fileInput');
 
@@ -86,6 +86,15 @@
     var H = 1240;
     canvas.width = W;
     canvas.height = H;
+
+    // --- NEW: Download Function ---
+    function downloadPoster() {
+        const name = document.getElementById('inputName').value.trim() || 'Pilgrims_Poster';
+        const link = document.createElement('a');
+        link.download = `Pilgrims_Family_${name.replace(/\s+/g, '_')}.png`;
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+    }
 
     function roundRect(cx, x, y, w, h, r) {
         cx.beginPath();
@@ -101,7 +110,6 @@
         cx.closePath();
     }
 
-    // High-end Text Wrapping with Line Height Control
     function wrapText(text, x, y, maxWidth, lineHeight) {
         var words = text.split(' ');
         var line = '';
@@ -138,10 +146,9 @@
         ctx.textAlign = 'left';
         ctx.fillStyle = '#0f172a';
         ctx.font = '900 14px Inter';
-        ctx.letterSpacing = "2px";
         ctx.fillText('PILGRIMS FAMILY DIGITAL ARCHIVE', 70, 105);
 
-        // 4. Headline - Playfair Display for Elegance
+        // 4. Headline
         ctx.fillStyle = '#0f172a';
         ctx.font = 'italic 700 90px "Playfair Display"';
         ctx.fillText('Happy', 70, 240);
@@ -153,14 +160,12 @@
 
         if (userImage) {
             ctx.save();
-            // Shadow for depth
             ctx.shadowColor = 'rgba(0,0,0,0.12)';
             ctx.shadowBlur = 40;
             ctx.shadowOffsetY = 20;
             roundRect(ctx, imgX, imgY, imgW, imgH, 20);
             ctx.clip();
 
-            // Cover Fit
             var imgRatio = userImage.width / userImage.height;
             var canvasRatio = imgW / imgH;
             var dW, dH, dX, dY;
@@ -183,13 +188,12 @@
             ctx.fillText('UPLOAD CELEBRANT PHOTO', imgX + imgW/2, imgY + imgH/2);
         }
 
-        // 6. Name Overlay (The Glass Panel)
+        // 6. Name Overlay
         var name = document.getElementById('inputName').value.toUpperCase();
         ctx.save();
         ctx.textAlign = 'center';
         ctx.fillStyle = '#f59e0b';
         ctx.font = '900 42px Inter';
-        // Positioned vertically centered relative to the bottom of the image
         ctx.fillText(name, imgX + imgW/2, imgY + imgH + 60);
         ctx.restore();
 
@@ -207,7 +211,7 @@
         // 8. Scripture Section
         ctx.fillStyle = '#f59e0b';
         ctx.font = '900 12px Inter';
-        ctx.fillText('SCRIPTIONAL GRACE', 70, wishEndY + 60);
+        ctx.fillText('SCRIPTURAL GRACE', 70, wishEndY + 60);
 
         var verse = document.getElementById('inputVerse').value;
         var ref = document.getElementById('inputRef').value;
@@ -225,10 +229,11 @@
         ctx.fillText('PILGRIMS FAMILY // WHILE PILGRIMS HERE, WE JOURNEY ON', 70, H - 80);
     }
 
-    // Re-bind listeners for the improved draw function
+    // Event Listeners
     ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
         document.getElementById(id).addEventListener('input', draw);
     });
+
     fileInput.addEventListener('change', function(e) {
         var reader = new FileReader();
         reader.onload = function(event) {
@@ -238,7 +243,10 @@
         };
         if (e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
     });
-    window.onload = draw;
+
+    // Wait for fonts to load before first draw
+    document.fonts.ready.then(draw);
+
 </script>
 </body>
 </html>
