@@ -3,250 +3,319 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PILGRIMS FAMILY // POSTER ENGINE</title>
+    <title>PILGRIMS FAMILY // POSTER ENGINE v2.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #0a0a0a; color: #fff; }
+
+        :root { --amber-500: #f59e0b; }
+        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #fff; scroll-behavior: smooth; }
         .serif { font-family: 'Playfair Display', serif; }
-        canvas { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.7); display: block; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--amber-500); }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+            border-radius: 4px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            background: #fff;
+        }
+
+        .input-group:focus-within label { color: var(--amber-500); }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
     </style>
 </head>
-<body class="selection:bg-amber-500 selection:text-black">
-    <div class="min-h-screen p-4 md:p-8">
-        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+<body class="selection:bg-amber-500 selection:text-black antialiased">
 
-            <!-- Sidebar / Controls -->
-            <div class="lg:col-span-5 space-y-6 bg-[#111] p-6 md:p-8 rounded-3xl border border-white/5">
-                <header class="flex items-center gap-4">
-                    <div class="w-12 h-12 bg-amber-500 rounded-2xl flex items-center justify-center shadow-lg shadow-amber-500/20">
-                        <i class="fa-solid fa-heart text-white text-xl"></i>
+    <div class="min-h-screen flex flex-col">
+        <!-- Top Navigation -->
+        <nav class="border-b border-white/5 px-6 py-4 flex justify-between items-center glass sticky top-0 z-50">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-amber-500 rounded flex items-center justify-center">
+                    <i class="fa-solid fa-cross text-black text-sm"></i>
+                </div>
+                <span class="font-black tracking-tighter uppercase text-lg">Pilgrims <span class="text-amber-500">Archive</span></span>
+            </div>
+            <div class="hidden md:flex gap-6 text-[10px] font-bold tracking-[0.2em] uppercase text-neutral-400">
+                <span class="text-amber-500">Engine v2.0</span>
+                <span>Spiritual Year 2026</span>
+            </div>
+        </nav>
+
+        <main class="flex-1 p-4 md:p-8 lg:p-12">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+
+                <!-- Controller Side -->
+                <div class="lg:col-span-5 space-y-8">
+                    <section>
+                        <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.3em] mb-6">Asset Customization</h2>
+
+                        <div class="space-y-5">
+                            <div class="input-group">
+                                <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Celebrant Name</label>
+                                <input type="text" id="inputName" value="Brother John Doe"
+                                    class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none font-bold uppercase text-sm transition-all">
+                            </div>
+
+                            <div class="input-group">
+                                <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Family Message</label>
+                                <textarea id="inputWishes"
+                                    class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none h-24 text-sm leading-relaxed text-neutral-300 resize-none transition-all">May your journey be filled with the warmth of His love and the strength of the Spirit. Happy Birthday from your Pilgrims Family.</textarea>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div class="input-group">
+                                    <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Scripture Verse</label>
+                                    <input type="text" id="inputVerse" value="The Lord is my light and my salvation."
+                                        class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none text-sm transition-all">
+                                </div>
+                                <div class="input-group">
+                                    <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Reference</label>
+                                    <input type="text" id="inputRef" value="Psalm 27:1"
+                                        class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none text-sm font-mono text-amber-500 transition-all">
+                                </div>
+                            </div>
+
+                            <div class="pt-4 grid grid-cols-2 gap-4">
+                                <button onclick="document.getElementById('fileInput').click()"
+                                    class="flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded font-black text-[10px] transition-all uppercase tracking-widest">
+                                    <i class="fa-solid fa-image text-amber-500"></i> Change Photo
+                                </button>
+                                <input type="file" id="fileInput" hidden accept="image/*">
+
+                                <button onclick="downloadPoster()"
+                                    class="flex items-center justify-center gap-3 py-4 bg-amber-500 hover:bg-amber-400 rounded font-black text-[10px] text-black transition-all uppercase tracking-widest">
+                                    <i class="fa-solid fa-cloud-arrow-down"></i> Export Asset
+                                </button>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="p-6 rounded border border-white/5 bg-neutral-900/50">
+                        <h3 class="text-[10px] font-black text-white uppercase tracking-widest mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-amber-500"></i> Digital Guidelines
+                        </h3>
+                        <p class="text-xs text-neutral-500 leading-loose">
+                            This engine generates 150DPI A5 assets optimized for WhatsApp and Telegram. Use high-resolution portraits for the best results.
+                        </p>
+                    </section>
+                </div>
+
+                <!-- Preview Side -->
+                <div class="lg:col-span-7 flex flex-col items-center justify-start lg:sticky lg:top-32">
+                    <div class="relative group w-full max-w-[450px]">
+                        <div class="absolute -inset-4 bg-amber-500/5 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
+                        <canvas id="posterCanvas" class="relative"></canvas>
                     </div>
-                    <div>
-                        <h1 class="text-xl font-black uppercase tracking-tighter">Family Engine</h1>
-                        <p class="text-neutral-500 text-[10px] font-bold uppercase tracking-widest">Pilgrims Family // Digital Asset</p>
-                    </div>
-                </header>
 
-                <div class="space-y-4 pt-6 border-t border-white/5">
-                    <div>
-                        <label class="text-[10px] font-black text-neutral-500 uppercase mb-2 block tracking-widest text-amber-500">Celebrant Identity</label>
-                        <input type="text" id="inputName" value="Member Name"
-                            class="w-full bg-black border border-white/10 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-bold uppercase text-sm">
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-neutral-500 uppercase mb-2 block tracking-widest text-amber-500">Family's Warm Wishes</label>
-                        <textarea id="inputWishes"
-                            class="w-full bg-black border border-white/10 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none h-20 text-sm leading-relaxed text-neutral-300">On this special day, your Pilgrims Family celebrates the light you bring to our community. We wish you a year of grace, joy, and spiritual growth.</textarea>
-                    </div>
-
-                    <div>
-                        <label class="text-[10px] font-black text-neutral-500 uppercase mb-2 block tracking-widest text-amber-500">Bible Verse & Reference</label>
-                        <textarea id="inputVerse"
-                            class="w-full bg-black border border-white/10 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none h-20 text-sm leading-relaxed text-neutral-300">The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you.</textarea>
-                        <input type="text" id="inputRef" value="Numbers 6:24-25"
-                            class="w-full bg-black border border-white/10 p-4 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none mt-2 text-xs font-mono text-amber-500">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <button onclick="document.getElementById('fileInput').click()"
-                            class="flex items-center justify-center gap-2 py-4 bg-neutral-800 hover:bg-neutral-700 rounded-xl font-bold text-xs transition-all uppercase tracking-widest">
-                            <i class="fa-solid fa-camera"></i> Photo
-                        </button>
-                        <input type="file" id="fileInput" hidden accept="image/*">
-
-                        <button onclick="downloadPoster()"
-                            class="flex items-center justify-center gap-2 py-4 bg-amber-500 hover:bg-amber-600 rounded-xl font-bold text-xs text-black transition-all uppercase tracking-widest">
-                            <i class="fa-solid fa-download"></i> Export
-                        </button>
+                    <div class="mt-8 flex gap-4">
+                        <div class="flex flex-col items-center">
+                            <span class="text-[8px] font-black text-neutral-600 uppercase tracking-[0.4em]">Resolution</span>
+                            <span class="text-xs font-mono text-neutral-400">874 x 1240</span>
+                        </div>
+                        <div class="w-px h-8 bg-white/10"></div>
+                        <div class="flex flex-col items-center">
+                            <span class="text-[8px] font-black text-neutral-600 uppercase tracking-[0.4em]">Format</span>
+                            <span class="text-xs font-mono text-neutral-400">PNG-24</span>
+                        </div>
                     </div>
                 </div>
             </div>
+        </main>
 
-            <!-- Preview Area -->
-            <div class="lg:col-span-7 flex flex-col items-center">
-                <div class="relative group">
-                    <div class="absolute -inset-1 bg-amber-500/10 rounded-xl blur-xl opacity-20"></div>
-                    <canvas id="posterCanvas" class="relative bg-white"></canvas>
-                </div>
-                <p class="mt-6 text-neutral-600 text-[10px] font-bold uppercase tracking-[0.3em]">A5 High-Fidelity Output</p>
-            </div>
-        </div>
+        <footer class="p-8 border-t border-white/5 text-center">
+            <p class="text-[10px] font-bold text-neutral-600 uppercase tracking-[0.5em]">
+                &copy; 2026 Pilgrims Family Ministry // Orlantech Innovations
+            </p>
+        </footer>
     </div>
 
     <script>
-                var canvas = document.getElementById('posterCanvas');
-    var ctx = canvas.getContext('2d');
-    var fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('posterCanvas');
+        const ctx = canvas.getContext('2d');
+        const fileInput = document.getElementById('fileInput');
 
-    var userImage = null;
-    var W = 874; // A5 @ 150DPI
-    var H = 1240;
-    canvas.width = W;
-    canvas.height = H;
+        let userImage = null;
+        const W = 874;
+        const H = 1240;
+        canvas.width = W;
+        canvas.height = H;
 
-    // --- NEW: Download Function ---
-    function downloadPoster() {
-        const name = document.getElementById('inputName').value.trim() || 'Pilgrims_Poster';
-        const link = document.createElement('a');
-        link.download = `Pilgrims_Family_${name.replace(/\s+/g, '_')}.png`;
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
-    }
-
-    function roundRect(cx, x, y, w, h, r) {
-        cx.beginPath();
-        cx.moveTo(x + r, y);
-        cx.lineTo(x + w - r, y);
-        cx.quadraticCurveTo(x + w, y, x + w, y + r);
-        cx.lineTo(x + w, y + h - r);
-        cx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-        cx.lineTo(x + r, y + h);
-        cx.quadraticCurveTo(x, y + h, x, y + h - r);
-        cx.lineTo(x, y + r);
-        cx.quadraticCurveTo(x, y, x + r, y);
-        cx.closePath();
-    }
-
-    function wrapText(text, x, y, maxWidth, lineHeight) {
-        var words = text.split(' ');
-        var line = '';
-        for (var n = 0; n < words.length; n++) {
-            var testLine = line + words[n] + ' ';
-            var metrics = ctx.measureText(testLine);
-            if (metrics.width > maxWidth && n > 0) {
-                ctx.fillText(line.trim(), x, y);
-                line = words[n] + ' ';
-                y += lineHeight;
-            } else {
-                line = testLine;
-            }
+        function downloadPoster() {
+            const name = document.getElementById('inputName').value.trim() || 'Member';
+            const link = document.createElement('a');
+            link.download = `PF_Birthday_${name.replace(/\s+/g, '_')}_2026.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
         }
-        ctx.fillText(line.trim(), x, y);
-        return y;
-    }
 
-    function draw() {
-        ctx.clearRect(0, 0, W, H);
+        function drawRoundRect(x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.lineTo(x + w - r, y);
+            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+            ctx.lineTo(x + w, y + h - r);
+            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+            ctx.lineTo(x + r, y + h);
+            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+            ctx.lineTo(x, y + r);
+            ctx.quadraticCurveTo(x, y, x + r, y);
+            ctx.closePath();
+        }
 
-        // 1. Premium Background
-        const bgGrad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, H);
-        bgGrad.addColorStop(0, '#ffffff');
-        bgGrad.addColorStop(1, '#fcfaf7');
-        ctx.fillStyle = bgGrad;
-        ctx.fillRect(0, 0, W, H);
+        function wrapText(text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, currentY);
+                    line = words[n] + ' ';
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line.trim(), x, currentY);
+            return currentY;
+        }
 
-        // 2. Geometric Accent (Amber-500)
-        ctx.fillStyle = '#f59e0b';
-        ctx.fillRect(70, 70, 120, 4);
+        function draw() {
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, W, H);
 
-        // 3. Branding
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#0f172a';
-        ctx.font = '900 14px Inter';
-        ctx.fillText('PILGRIMS FAMILY DIGITAL ARCHIVE', 70, 105);
+            // Subtle Background Pattern
+            ctx.strokeStyle = '#f8fafc';
+            ctx.lineWidth = 1;
+            for(let i=0; i<W; i+=40) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
+            }
 
-        // 4. Headline
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'italic 700 90px "Playfair Display"';
-        ctx.fillText('Happy', 70, 240);
-        ctx.font = '900 70px Inter';
-        ctx.fillText('BIRTHDAY', 70, 300);
+            // Margin Guidelines (Visual Balance)
+            const margin = 80;
 
-        // 5. Image & Frame Logic
-        var imgX = 460, imgY = 140, imgW = 340, imgH = 680;
+            // Header Branding
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(margin, margin, 40, 6);
 
-        if (userImage) {
+            ctx.fillStyle = '#0f172a';
+            ctx.font = '900 12px Inter';
+            ctx.fillText('PILGRIMS FAMILY OFFICIAL ASSET', margin, margin + 35);
+            ctx.fillText('EST. 2026 // SPIRITUAL GROWTH', margin, margin + 52);
+
+            // Large Typography
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'italic 700 110px "Playfair Display"';
+            ctx.fillText('Happy', margin - 5, margin + 180);
+
+            ctx.font = '900 80px Inter';
+            ctx.letterSpacing = "-2px";
+            ctx.fillText('BIRTHDAY', margin, margin + 255);
+            ctx.letterSpacing = "0px";
+
+            // Image Placeholder/Container
+            const imgX = 440, imgY = 100, imgW = 360, imgH = 750;
+
             ctx.save();
-            ctx.shadowColor = 'rgba(0,0,0,0.12)';
+            ctx.shadowColor = 'rgba(0,0,0,0.1)';
             ctx.shadowBlur = 40;
             ctx.shadowOffsetY = 20;
-            roundRect(ctx, imgX, imgY, imgW, imgH, 20);
-            ctx.clip();
+            drawRoundRect(imgX, imgY, imgW, imgH, 4);
 
-            var imgRatio = userImage.width / userImage.height;
-            var canvasRatio = imgW / imgH;
-            var dW, dH, dX, dY;
-            if (imgRatio > canvasRatio) {
-                dH = imgH; dW = imgH * imgRatio;
-                dX = imgX - (dW - imgW) / 2; dY = imgY;
+            if (userImage) {
+                ctx.clip();
+                const imgRatio = userImage.width / userImage.height;
+                const canvasRatio = imgW / imgH;
+                let dW, dH, dX, dY;
+                if (imgRatio > canvasRatio) {
+                    dH = imgH; dW = imgH * imgRatio;
+                    dX = imgX - (dW - imgW) / 2; dY = imgY;
+                } else {
+                    dW = imgW; dH = imgW / imgRatio;
+                    dX = imgX; dY = imgY - (dH - imgH) / 2;
+                }
+                ctx.drawImage(userImage, dX, dY, dW, dH);
             } else {
-                dW = imgW; dH = imgW / imgRatio;
-                dX = imgX; dY = imgY - (dH - imgH) / 2;
+                ctx.fillStyle = '#f8fafc';
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.fillStyle = '#cbd5e1';
+                ctx.textAlign = 'center';
+                ctx.font = '700 10px Inter';
+                ctx.fillText('AWAITING CELEBRANT PHOTO', imgX + imgW/2, imgY + imgH/2);
             }
-            ctx.drawImage(userImage, dX, dY, dW, dH);
             ctx.restore();
-        } else {
-            ctx.fillStyle = '#f1f5f9';
-            roundRect(ctx, imgX, imgY, imgW, imgH, 20);
-            ctx.fill();
-            ctx.fillStyle = '#94a3b8';
-            ctx.font = '700 14px Inter';
+
+            // Name Banner
+            const name = document.getElementById('inputName').value.toUpperCase();
+            ctx.fillStyle = '#f59e0b';
+            ctx.fillRect(imgX - 20, imgY + imgH - 80, imgW + 40, 100);
+
+            ctx.fillStyle = '#000';
             ctx.textAlign = 'center';
-            ctx.fillText('UPLOAD CELEBRANT PHOTO', imgX + imgW/2, imgY + imgH/2);
+            ctx.font = '900 42px Inter';
+            ctx.fillText(name, imgX + imgW/2, imgY + imgH - 15);
+
+            // Message Body
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = '900 10px Inter';
+            ctx.fillText('FAMILY TRIBUTE', margin, 420);
+
+            const wishes = document.getElementById('inputWishes').value;
+            ctx.fillStyle = '#334155';
+            ctx.font = '400 24px Inter';
+            const wishEndY = wrapText(wishes, margin, 460, 320, 36);
+
+            // Scripture
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = '900 10px Inter';
+            ctx.fillText('DIVINE PROMISE', margin, wishEndY + 80);
+
+            const verse = document.getElementById('inputVerse').value;
+            const ref = document.getElementById('inputRef').value;
+            ctx.fillStyle = '#0f172a';
+            ctx.font = 'italic 700 28px "Playfair Display"';
+            const verseEndY = wrapText('"' + verse + '"', margin, wishEndY + 120, 320, 38);
+
+            ctx.fillStyle = '#f59e0b';
+            ctx.font = '900 16px Inter';
+            ctx.fillText('— ' + ref.toUpperCase(), margin, verseEndY + 45);
+
+            // Footer
+            ctx.fillStyle = '#94a3b8';
+            ctx.font = '800 10px Inter';
+            ctx.fillText('WHILE PILGRIMS HERE, WE JOURNEY ON', margin, H - margin);
+
+            ctx.textAlign = 'right';
+            ctx.fillText('PF-2026-ARCHIVE', W - margin, H - margin);
         }
 
-        // 6. Name Overlay
-        var name = document.getElementById('inputName').value.toUpperCase();
-        ctx.save();
-        ctx.textAlign = 'center';
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '900 42px Inter';
-        ctx.fillText(name, imgX + imgW/2, imgY + imgH + 60);
-        ctx.restore();
+        // Listeners
+        ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
+            document.getElementById(id).addEventListener('input', draw);
+        });
 
-        // 7. Content - Warm Wishes
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '900 12px Inter';
-        ctx.fillText('A MESSAGE FROM THE FAMILY', 70, 420);
+        fileInput.addEventListener('change', function(e) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() { userImage = img; draw(); };
+                img.src = event.target.result;
+            };
+            if (e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
+        });
 
-        var wishes = document.getElementById('inputWishes').value;
-        ctx.fillStyle = '#334155';
-        ctx.font = '400 22px Inter';
-        var wishEndY = wrapText(wishes, 70, 455, 340, 34);
-
-        // 8. Scripture Section
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '900 12px Inter';
-        ctx.fillText('SCRIPTURAL GRACE', 70, wishEndY + 60);
-
-        var verse = document.getElementById('inputVerse').value;
-        var ref = document.getElementById('inputRef').value;
-        ctx.fillStyle = '#475569';
-        ctx.font = 'italic 500 24px "Playfair Display"';
-        var verseEndY = wrapText('"' + verse + '"', 70, wishEndY + 95, 340, 32);
-
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '700 16px Inter';
-        ctx.fillText('— ' + ref, 70, verseEndY + 40);
-
-        // 9. Footer
-        ctx.fillStyle = '#cbd5e1';
-        ctx.font = '700 12px Inter';
-        ctx.fillText('PILGRIMS FAMILY // WHILE PILGRIMS HERE, WE JOURNEY ON', 70, H - 80);
-    }
-
-    // Event Listeners
-    ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
-        document.getElementById(id).addEventListener('input', draw);
-    });
-
-    fileInput.addEventListener('change', function(e) {
-        var reader = new FileReader();
-        reader.onload = function(event) {
-            var img = new Image();
-            img.onload = function() { userImage = img; draw(); };
-            img.src = event.target.result;
-        };
-        if (e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
-    });
-
-    // Wait for fonts to load before first draw
-    document.fonts.ready.then(draw);
-
-</script>
+        document.fonts.ready.then(draw);
+    </script>
 </body>
 </html>
