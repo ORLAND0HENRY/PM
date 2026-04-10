@@ -3,79 +3,279 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prayer Lead Schedule</title>
+    <title>Kangemi Ambassadors Schedule Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
-        .brand-border { border-color: #f59e0b; }
-        .brand-bg { background-color: #f59e0b; }
-        .brand-text { color: #f59e0b; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .brand-amber { color: #f59e0b; }
+        .bg-brand-amber { background-color: #f59e0b; }
+        .border-brand-amber { border-color: #f59e0b; }
+
+        @media print {
+            .no-print { display: none; }
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans p-4 md:p-8">
+<body class="bg-gray-100 min-h-screen pb-20">
 
-    <div class="max-w-2xl mx-auto bg-white shadow-lg rounded-xl overflow-hidden border-t-4 brand-border">
-        <div class="p-6 text-center border-b border-gray-100">
-            <h1 class="text-2xl font-bold text-gray-800 uppercase tracking-wide">KANGEMI AMBASSADORS PRAYER Lead Schedule</h1>
-            <p class="text-gray-500 mt-1">Spiritual Year 2026 | Weekly Rotation</p>
+    <!-- Header -->
+    <header class="bg-white border-b sticky top-0 z-10 no-print">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-extrabold text-gray-800 tracking-tight">
+                <span class="brand-amber">KANGEMI</span> AMBASSADORS
+            </h1>
+            <div class="flex gap-2">
+                <button onclick="toggleSection('members')" class="text-sm font-semibold px-3 py-1 rounded-lg hover:bg-gray-100 transition">Members</button>
+                <button onclick="generateSchedule()" class="bg-brand-amber text-white text-sm font-bold px-4 py-1 rounded-lg shadow-md hover:shadow-lg transition">Generate</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 mt-8 space-y-8">
+
+        <!-- Member Management Section -->
+        <section id="members-section" class="hidden bg-white p-6 rounded-2xl shadow-sm border border-gray-200 no-print">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-bold text-gray-800">Member Directory</h2>
+                <button onclick="toggleSection('members')" class="text-gray-400 hover:text-red-500">✕</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <input id="new-name" type="text" placeholder="Full Name" class="border p-2 rounded-lg outline-none focus:ring-2 focus:ring-amber-500">
+                <select id="new-gender" class="border p-2 rounded-lg">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+            </div>
+            <button onclick="addMember()" class="w-full bg-gray-800 text-white py-2 rounded-lg font-bold mb-4">Add Member</button>
+
+            <div id="member-list" class="flex flex-wrap gap-2 max-h-40 overflow-y-auto p-2 border rounded-lg">
+                <!-- Member tags appear here -->
+            </div>
+        </section>
+
+        <!-- Main Schedule Poster Area -->
+        <div id="poster-capture" class="max-w-md mx-auto bg-white shadow-2xl rounded-2xl overflow-hidden border-t-8 border-brand-amber relative">
+            <div class="absolute top-0 right-0 p-4 opacity-10">
+                <svg width="100" height="100" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71z"/></svg>
+            </div>
+
+            <div class="p-8 text-center bg-white border-b border-gray-50">
+                <div class="inline-block px-3 py-1 rounded-full bg-amber-50 text-amber-600 text-[10px] font-black uppercase tracking-widest mb-2">Spiritual Year 2026</div>
+                <h2 class="text-2xl font-black text-gray-900 leading-tight uppercase">Prayer Lead Schedule</h2>
+                <p id="week-range" class="text-gray-500 text-sm mt-1 font-medium italic">Weekly Rotation</p>
+            </div>
+
+            <div class="px-2">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="text-[11px] font-bold text-gray-400 uppercase tracking-tighter">
+                            <th class="py-3 px-4">Day</th>
+                            <th class="py-3 px-2 text-center">Morning (5AM)</th>
+                            <th class="py-3 px-2 text-center">Evening (8PM)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="schedule-body" class="text-sm">
+                        <!-- Rows injected here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="p-6 bg-gray-50 text-center border-t border-gray-100">
+                <p class="text-[11px] text-gray-400 font-medium italic leading-relaxed">
+                    "Prayer does not bring God down to us, but brings us up to Him"
+                </p>
+                <div class="mt-4 flex justify-center gap-1">
+                    <div class="h-1 w-8 bg-brand-amber rounded-full"></div>
+                    <div class="h-1 w-2 bg-brand-amber rounded-full opacity-30"></div>
+                </div>
+            </div>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="brand-bg text-white">
-                        <th class="py-4 px-6 font-semibold uppercase text-sm">Day</th>
-                        <th class="py-4 px-6 font-semibold uppercase text-sm text-center">Morning</th>
-                        <th class="py-4 px-6 font-semibold uppercase text-sm text-center">Evening</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-100">
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Monday</td>
-                        <td class="py-4 px-6 text-center">Orlando</td>
-                        <td class="py-4 px-6 text-center">Ruth Nyaboke</td>
-                    </tr>
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Tuesday</td>
-                        <td class="py-4 px-6 text-center">Methuselah</td>
-                        <td class="py-4 px-6 text-center">Teddy</td>
-                    </tr>
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Wednesday</td>
-                        <td class="py-4 px-6 text-center">Diana</td>
-                        <td class="py-4 px-6 text-center">Askah</td>
-                    </tr>
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Thursday</td>
-                        <td class="py-4 px-6 text-center">Willis</td>
-                        <td class="py-4 px-6 text-center">Anita</td>
-                    </tr>
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Friday</td>
-                        <td class="py-4 px-6 text-center">June</td>
-                        <td class="py-4 px-6 text-center">Tina</td>
-                    </tr>
+        <!-- Action Controls -->
+        <section class="flex flex-col md:flex-row gap-4 justify-center no-print">
+            <button onclick="downloadPoster()" class="flex-1 bg-white border-2 border-gray-800 text-gray-800 font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 hover:bg-gray-50">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                Save as Poster
+            </button>
+            <button onclick="exportToWhatsApp()" class="flex-1 bg-green-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg hover:bg-green-700">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.438 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                Copy for WhatsApp
+            </button>
+        </section>
 
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Saturday</td>
-                        <td class="py-4 px-6 text-center">Juma</td>
-                        <td class="py-4 px-6 text-center">Mercy John</td>
-                    </tr>
-                    
-                    <tr class="hover:bg-amber-50 transition-colors">
-                        <td class="py-4 px-6 font-bold text-gray-700">Sunday</td>
-                        <td class="py-4 px-6 text-center">Lamech</td>
-                        <td class="py-4 px-6 text-center">Davy</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+    </main>
 
-        <div class="p-4 bg-gray-50 border-t border-gray-100">
-            <p class="text-xs text-gray-400 text-center italic">
-                "Prayer does not bring God down to us, but brings us up to Him"
-            </p>
-        </div>
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-3 rounded-full text-sm font-bold shadow-2xl opacity-0 transition-opacity pointer-events-none">
+        Copied to clipboard!
     </div>
 
+    <script>
+        // Updated Members Data based on user feedback
+        let members = [
+            { name: "Orlando", gender: "Male", count: 0 },
+            { name: "Ruth Nyaboke (Blessed)", gender: "Female", count: 0 },
+            { name: "Methuselah", gender: "Male", count: 0 },
+            { name: "Teddy", gender: "Male", count: 0 },
+            { name: "Diana", gender: "Female", count: 0 },
+            { name: "Askah", gender: "Female", count: 0 },
+            { name: "Annita (Itz)", gender: "Female", count: 0 },
+            { name: "June", gender: "Female", count: 0 },
+            { name: "tina", gender: "Female", count: 0 },
+            { name: "Juma", gender: "Male", count: 0 },
+            { name: "Mercy John", gender: "Female", count: 0 },
+            { name: "Lamech", gender: "Male", count: 0 },
+            { name: "Davy", gender: "Male", count: 0 },
+            { name: "Brayo", gender: "Male", count: 0 },
+            { name: "Brenda", gender: "Female", count: 0 },
+            { name: "Britt", gender: "Female", count: 0 },
+            { name: "Esther", gender: "Female", count: 0 },
+            { name: "Géraldine", gender: "Female", count: 0 },
+            { name: "Hellen", gender: "Female", count: 0 },
+            { name: "Hope", gender: "Female", count: 0 },
+            { name: "Jane", gender: "Female", count: 0 },
+            { name: "Kipngetich", gender: "Male", count: 0 },
+            { name: "Elsie (Lç)", gender: "Female", count: 0 },
+            { name: "Leah", gender: "Female", count: 0 },
+            { name: "Manu", gender: "Male", count: 0 },
+            { name: "Masinga", gender: "Female", count: 0 },
+            { name: "Koros", gender: "Male", count: 0 },
+            { name: "Millie", gender: "Female", count: 0 },
+            { name: "mkwambox", gender: "Female", count: 0 },
+            { name: "Nicole", gender: "Female", count: 0 },
+            { name: "Obadiah", gender: "Male", count: 0 },
+            { name: "Onesmas", gender: "Male", count: 0 },
+            { name: "Purity", gender: "Female", count: 0 },
+            { name: "Quinvada", gender: "Female", count: 0 },
+            { name: "Rael", gender: "Female", count: 0 },
+            { name: "Ruth Tende", gender: "Female", count: 0 },
+            { name: "V£ra", gender: "Female", count: 0 },
+            { name: "Valentine", gender: "Female", count: 0 },
+            { name: "Caleb Oseko", gender: "Male", count: 0 },
+            { name: "Centrine", gender: "Female", count: 0 }
+        ];
+
+        let currentSchedule = [];
+        const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
+
+        window.onload = () => {
+            renderMemberList();
+            generateSchedule();
+        };
+
+        function toggleSection(id) {
+            const el = document.getElementById(id + '-section');
+            el.classList.toggle('hidden');
+        }
+
+        function addMember() {
+            const name = document.getElementById('new-name').value;
+            const gender = document.getElementById('new-gender').value;
+            if(!name) return;
+            members.push({ name, gender, count: 0 });
+            document.getElementById('new-name').value = '';
+            renderMemberList();
+        }
+
+        function removeMember(index) {
+            members.splice(index, 1);
+            renderMemberList();
+        }
+
+        function renderMemberList() {
+            const list = document.getElementById('member-list');
+            list.innerHTML = members.map((m, i) => `
+                <div class="flex items-center gap-2 bg-gray-50 border px-2 py-1 rounded-md text-xs font-medium">
+                    <span class="${m.gender === 'Male' ? 'text-blue-500' : 'text-pink-500'}">●</span>
+                    ${m.name}
+                    <button onclick="removeMember(${i})" class="text-gray-400 hover:text-red-500 ml-1">✕</button>
+                </div>
+            `).join('');
+        }
+
+        function generateSchedule() {
+            currentSchedule = [];
+            days.forEach((day, i) => {
+                let morning, evening;
+                if (i % 2 === 0) {
+                    morning = getNextMember('Male');
+                    evening = getNextMember('Female');
+                } else {
+                    morning = getNextMember('Female');
+                    evening = getNextMember('Male');
+                }
+                currentSchedule.push({ day, morning, evening });
+            });
+            renderSchedule();
+            updateDateRange();
+        }
+
+        function getNextMember(gender) {
+            const pool = members.filter(m => m.gender === gender).sort((a,b) => a.count - b.count);
+            if (pool.length === 0) return "TBD";
+            const picked = pool[Math.floor(Math.random() * Math.min(pool.length, 3))];
+            picked.count++;
+            return picked.name;
+        }
+
+        function renderSchedule() {
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = currentSchedule.map((row, i) => `
+                <tr class="border-b border-gray-50 hover:bg-amber-50/30 transition-colors">
+                    <td class="py-4 px-4 font-bold text-gray-800">${row.day}</td>
+                    <td class="py-4 px-2 text-center text-gray-600">
+                        <input type="text" value="${row.morning}" class="bg-transparent text-center w-full outline-none focus:text-amber-600 font-medium" onchange="updateManualEntry(${i}, 'morning', this.value)">
+                    </td>
+                    <td class="py-4 px-2 text-center text-gray-600">
+                        <input type="text" value="${row.evening}" class="bg-transparent text-center w-full outline-none focus:text-amber-600 font-medium" onchange="updateManualEntry(${i}, 'evening', this.value)">
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateManualEntry(index, shift, value) {
+            currentSchedule[index][shift] = value;
+        }
+
+        function updateDateRange() {
+            const now = new Date();
+            const start = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+            const end = new Date(now.setDate(now.getDate() + 6));
+            const options = { month: 'short', day: 'numeric' };
+            document.getElementById('week-range').innerText = `Week of ${start.toLocaleDateString(undefined, options)} - ${end.toLocaleDateString(undefined, options)}, 2026`;
+        }
+
+        async function downloadPoster() {
+            const poster = document.getElementById('poster-capture');
+            const canvas = await html2canvas(poster, { scale: 3, backgroundColor: "#f3f4f6" });
+            const link = document.createElement('a');
+            link.download = `Prayer_Schedule_2026.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function exportToWhatsApp() {
+            let text = `*KANGEMI AMBASSADORS PRAYER SCHEDULE*\n`;
+            text += `_Spiritual Year 2026 | ${document.getElementById('week-range').innerText}_\n\n`;
+            currentSchedule.forEach(r => {
+                text += `*${r.day}*\n🌅 Morning: ${r.morning}\n🌃 Evening: ${r.evening}\n\n`;
+            });
+            text += `_"Prayer does not bring God down to us, but brings us up to Him"_`;
+            const el = document.createElement('textarea');
+            el.value = text;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            showToast();
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('opacity-100');
+            setTimeout(() => toast.classList.remove('opacity-100'), 2000);
+        }
+    </script>
 </body>
 </html>
