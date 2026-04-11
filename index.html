@@ -137,185 +137,175 @@
     </div>
 
     <script>
-        const canvas = document.getElementById('posterCanvas');
-        const ctx = canvas.getContext('2d');
-        const fileInput = document.getElementById('fileInput');
+    const canvas = document.getElementById('posterCanvas');
+    const ctx = canvas.getContext('2d');
+    const fileInput = document.getElementById('fileInput');
 
-        let userImage = null;
-        const W = 874;
-        const H = 1240;
-        canvas.width = W;
-        canvas.height = H;
+    let userImage = null;
+    // Standard A5 at 150DPI
+    const W = 874;
+    const H = 1240;
 
-        function downloadPoster() {
-            const name = document.getElementById('inputName').value.trim() || 'Member';
-            const link = document.createElement('a');
-            link.download = `PF_Birthday_${name.replace(/\s+/g, '_')}_2026.png`;
-            link.href = canvas.toDataURL('image/png', 1.0);
-            link.click();
+    // Set display size (CSS pixels)
+    canvas.style.width = '100%';
+    canvas.style.maxWidth = '450px';
+    // Set actual render size
+    canvas.width = W;
+    canvas.height = H;
+
+    function downloadPoster() {
+        const name = document.getElementById('inputName').value.trim() || 'Member';
+        const link = document.createElement('a');
+        link.download = `PF_Birthday_${name.replace(/\s+/g, '_')}_2026.png`;
+        // High quality export
+        link.href = canvas.toDataURL('image/png', 1.0);
+        link.click();
+    }
+
+    function draw() {
+        // Clear and Reset
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, W, H);
+
+        // Grid Pattern
+        ctx.strokeStyle = 'rgba(245, 158, 11, 0.05)';
+        ctx.lineWidth = 1;
+        for(let i=0; i<W; i+=50) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
+            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
         }
 
-        function drawRoundRect(x, y, w, h, r) {
-            ctx.beginPath();
-            ctx.moveTo(x + r, y);
-            ctx.lineTo(x + w - r, y);
-            ctx.quadraticCurveTo(x + w, y, x + w, y + r);
-            ctx.lineTo(x + w, y + h - r);
-            ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
-            ctx.lineTo(x + r, y + h);
-            ctx.quadraticCurveTo(x, y + h, x, y + h - r);
-            ctx.lineTo(x, y + r);
-            ctx.quadraticCurveTo(x, y, x + r, y);
-            ctx.closePath();
-        }
+        const margin = 80;
 
-        function wrapText(text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            let line = '';
-            let currentY = y;
-            for (let n = 0; n < words.length; n++) {
-                let testLine = line + words[n] + ' ';
-                let metrics = ctx.measureText(testLine);
-                if (metrics.width > maxWidth && n > 0) {
-                    ctx.fillText(line.trim(), x, currentY);
-                    line = words[n] + ' ';
-                    currentY += lineHeight;
-                } else {
-                    line = testLine;
-                }
-            }
-            ctx.fillText(line.trim(), x, currentY);
-            return currentY;
-        }
+        // Branding
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(margin, margin, 45, 8);
+        ctx.fillStyle = '#0f172a';
+        ctx.font = '900 14px Inter';
+        ctx.textAlign = 'left';
+        ctx.fillText('PILGRIMS FAMILY // MINISTRY ASSET', margin, margin + 40);
 
-        function draw() {
-            ctx.fillStyle = '#ffffff';
-            ctx.fillRect(0, 0, W, H);
+        // Main Typography
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'italic 700 120px "Playfair Display"';
+        ctx.fillText('Happy', margin - 5, 220);
+        ctx.font = '900 85px Inter';
+        ctx.letterSpacing = "-3px";
+        ctx.fillText('BIRTHDAY', margin, 305);
+        ctx.letterSpacing = "0px";
 
-            // Subtle Background Pattern
-            ctx.strokeStyle = '#f8fafc';
-            ctx.lineWidth = 1;
-            for(let i=0; i<W; i+=40) {
-                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
-            }
+        // Image Handling
+        const imgConfig = { x: 440, y: 100, w: 360, h: 750, r: 8 };
 
-            // Margin Guidelines (Visual Balance)
-            const margin = 80;
+        ctx.save();
+        // Modern shadow
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
+        ctx.shadowBlur = 50;
+        ctx.shadowOffsetY = 30;
 
-            // Header Branding
-            ctx.textAlign = 'left';
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillRect(margin, margin, 40, 6);
+        // Rounded Rect Clip
+        ctx.beginPath();
+        ctx.roundRect(imgConfig.x, imgConfig.y, imgConfig.w, imgConfig.h, imgConfig.r);
+        ctx.clip();
 
-            ctx.fillStyle = '#0f172a';
-            ctx.font = '900 12px Inter';
-            ctx.fillText('PILGRIMS FAMILY OFFICIAL ASSET', margin, margin + 35);
-            ctx.fillText('EST. 2026 // SPIRITUAL GROWTH', margin, margin + 52);
-
-            // Large Typography
-            ctx.fillStyle = '#0f172a';
-            ctx.font = 'italic 700 110px "Playfair Display"';
-            ctx.fillText('Happy', margin - 5, margin + 180);
-
-            ctx.font = '900 80px Inter';
-            ctx.letterSpacing = "-2px";
-            ctx.fillText('BIRTHDAY', margin, margin + 255);
-            ctx.letterSpacing = "0px";
-
-            // Image Placeholder/Container
-            const imgX = 440, imgY = 100, imgW = 360, imgH = 750;
-
-            ctx.save();
-            ctx.shadowColor = 'rgba(0,0,0,0.1)';
-            ctx.shadowBlur = 40;
-            ctx.shadowOffsetY = 20;
-            drawRoundRect(imgX, imgY, imgW, imgH, 4);
-
-            if (userImage) {
-                ctx.clip();
-                const imgRatio = userImage.width / userImage.height;
-                const canvasRatio = imgW / imgH;
-                let dW, dH, dX, dY;
-                if (imgRatio > canvasRatio) {
-                    dH = imgH; dW = imgH * imgRatio;
-                    dX = imgX - (dW - imgW) / 2; dY = imgY;
-                } else {
-                    dW = imgW; dH = imgW / imgRatio;
-                    dX = imgX; dY = imgY - (dH - imgH) / 2;
-                }
-                ctx.drawImage(userImage, dX, dY, dW, dH);
-            } else {
-                ctx.fillStyle = '#f8fafc';
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.fillStyle = '#cbd5e1';
-                ctx.textAlign = 'center';
-                ctx.font = '700 10px Inter';
-                ctx.fillText('AWAITING CELEBRANT PHOTO', imgX + imgW/2, imgY + imgH/2);
-            }
-            ctx.restore();
-
-            // Name Banner
-            const name = document.getElementById('inputName').value.toUpperCase();
-            ctx.fillStyle = '#f59e0b';
-            ctx.fillRect(imgX - 20, imgY + imgH - 80, imgW + 40, 100);
-
-            ctx.fillStyle = '#000';
-            ctx.textAlign = 'center';
-            ctx.font = '900 42px Inter';
-            ctx.fillText(name, imgX + imgW/2, imgY + imgH - 15);
-
-            // Message Body
-            ctx.textAlign = 'left';
-            ctx.fillStyle = '#f59e0b';
-            ctx.font = '900 10px Inter';
-            ctx.fillText('FAMILY TRIBUTE', margin, 420);
-
-            const wishes = document.getElementById('inputWishes').value;
-            ctx.fillStyle = '#334155';
-            ctx.font = '400 24px Inter';
-            const wishEndY = wrapText(wishes, margin, 460, 320, 36);
-
-            // Scripture
-            ctx.fillStyle = '#f59e0b';
-            ctx.font = '900 10px Inter';
-            ctx.fillText('DIVINE PROMISE', margin, wishEndY + 80);
-
-            const verse = document.getElementById('inputVerse').value;
-            const ref = document.getElementById('inputRef').value;
-            ctx.fillStyle = '#0f172a';
-            ctx.font = 'italic 700 28px "Playfair Display"';
-            const verseEndY = wrapText('"' + verse + '"', margin, wishEndY + 120, 320, 38);
-
-            ctx.fillStyle = '#f59e0b';
-            ctx.font = '900 16px Inter';
-            ctx.fillText('— ' + ref.toUpperCase(), margin, verseEndY + 45);
-
-            // Footer
+        if (userImage) {
+            const scale = Math.max(imgConfig.w / userImage.width, imgConfig.h / userImage.height);
+            const x = imgConfig.x + (imgConfig.w - userImage.width * scale) / 2;
+            const y = imgConfig.y + (imgConfig.h - userImage.height * scale) / 2;
+            ctx.drawImage(userImage, x, y, userImage.width * scale, userImage.height * scale);
+        } else {
+            ctx.fillStyle = '#f1f5f9';
+            ctx.fill();
             ctx.fillStyle = '#94a3b8';
-            ctx.font = '800 10px Inter';
-            ctx.fillText('WHILE PILGRIMS HERE, WE JOURNEY ON', margin, H - margin);
-
-            ctx.textAlign = 'right';
-            ctx.fillText('PF-2026-ARCHIVE', W - margin, H - margin);
+            ctx.font = '700 12px Inter';
+            ctx.textAlign = 'center';
+            ctx.fillText('UPLOAD PORTRAIT', imgConfig.x + imgConfig.w/2, imgConfig.y + imgConfig.h/2);
         }
+        ctx.restore();
 
-        // Listeners
-        ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
-            document.getElementById(id).addEventListener('input', draw);
-        });
+        // Name Tag
+        const name = document.getElementById('inputName').value.toUpperCase();
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(imgConfig.x - 20, imgConfig.y + imgConfig.h - 100, imgConfig.w + 40, 110);
+        ctx.fillStyle = '#000000';
+        ctx.textAlign = 'center';
+        ctx.font = '900 45px Inter';
+        // Auto-scale font size for long names
+        if(ctx.measureText(name).width > imgConfig.w) ctx.font = '900 32px Inter';
+        ctx.fillText(name, imgConfig.x + imgConfig.w/2, imgConfig.y + imgConfig.h - 30);
 
-        fileInput.addEventListener('change', function(e) {
+        // Body Content
+        ctx.textAlign = 'left';
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = '900 12px Inter';
+        ctx.fillText('THE MESSAGE', margin, 420);
+
+        ctx.fillStyle = '#475569';
+        ctx.font = '400 24px Inter';
+        const wishEndY = wrapText(document.getElementById('inputWishes').value, margin, 465, 320, 38);
+
+        // Scripture Block
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = '900 12px Inter';
+        ctx.fillText('SCRIPTURE', margin, wishEndY + 80);
+
+        ctx.fillStyle = '#0f172a';
+        ctx.font = 'italic 700 32px "Playfair Display"';
+        const verseText = `"${document.getElementById('inputVerse').value}"`;
+        const verseEndY = wrapText(verseText, margin, wishEndY + 130, 320, 42);
+
+        ctx.fillStyle = '#f59e0b';
+        ctx.font = '900 18px Inter';
+        ctx.fillText(`— ${document.getElementById('inputRef').value.toUpperCase()}`, margin, verseEndY + 50);
+
+        // Global Footer
+        ctx.fillStyle = '#cbd5e1';
+        ctx.font = '800 11px Inter';
+        ctx.textAlign = 'left';
+        ctx.fillText('© 2026 ORLANTECH INNOVATIONS', margin, H - margin);
+        ctx.textAlign = 'right';
+        ctx.fillText('SECURE DIGITAL ASSET // V2.0', W - margin, H - margin);
+    }
+
+    // Helper: Modern Text Wrapper
+    function wrapText(text, x, y, maxWidth, lineHeight) {
+        const words = text.split(' ');
+        let line = '';
+        let testY = y;
+        for (let n = 0; n < words.length; n++) {
+            let testLine = line + words[n] + ' ';
+            if (ctx.measureText(testLine).width > maxWidth && n > 0) {
+                ctx.fillText(line.trim(), x, testY);
+                line = words[n] + ' ';
+                testY += lineHeight;
+            } else {
+                line = testLine;
+            }
+        }
+        ctx.fillText(line.trim(), x, testY);
+        return testY;
+    }
+
+    // Update triggers
+    ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
+        document.getElementById(id).addEventListener('input', draw);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && file.type.startsWith('image/')) {
             const reader = new FileReader();
-            reader.onload = function(event) {
+            reader.onload = (event) => {
                 const img = new Image();
-                img.onload = function() { userImage = img; draw(); };
+                img.onload = () => { userImage = img; draw(); };
                 img.src = event.target.result;
             };
-            if (e.target.files[0]) reader.readAsDataURL(e.target.files[0]);
-        });
+            reader.readAsDataURL(file);
+        }
+    });
 
-        document.fonts.ready.then(draw);
-    </script>
+    document.fonts.ready.then(draw);
+</script>
 </body>
 </html>
