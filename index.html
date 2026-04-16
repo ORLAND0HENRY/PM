@@ -3,309 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PILGRIMS FAMILY // POSTER ENGINE v2.0</title>
+    <title>PILGRIMS FAMILY // POSTER ENGINE v2.1</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=Playfair+Display:ital,wght@0,700;1,700&display=swap');
 
         :root { --amber-500: #f59e0b; }
-        body { font-family: 'Inter', sans-serif; background-color: #050505; color: #fff; scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #050505;
+            color: #ffffff;
+            -webkit-font-smoothing: antialiased;
+        }
         .serif { font-family: 'Playfair Display', serif; }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--amber-500); }
+        .glass {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
 
         canvas {
             max-width: 100%;
             height: auto;
-            border-radius: 4px;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            background: #fff;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 40px 100px -20px rgba(0,0,0,0.7);
+            transition: transform 0.3s ease;
         }
 
-        .input-group:focus-within label { color: var(--amber-500); }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        input, textarea {
+            transition: all 0.2s ease;
+        }
+
+        input:focus, textarea:focus {
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: #050505; }
+        ::-webkit-scrollbar-thumb { background: #262626; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--amber-500); }
     </style>
 </head>
-<body class="selection:bg-amber-500 selection:text-black antialiased">
+<body class="selection:bg-amber-500 selection:text-black">
 
     <div class="min-h-screen flex flex-col">
-        <!-- Top Navigation -->
+        <!-- Brand Header -->
         <nav class="border-b border-white/5 px-6 py-4 flex justify-between items-center glass sticky top-0 z-50">
-            <div class="flex items-center gap-3">
-                <div class="w-8 h-8 bg-amber-500 rounded flex items-center justify-center">
-                    <i class="fa-solid fa-cross text-black text-sm"></i>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 bg-amber-500 rounded-lg flex items-center justify-center rotate-3 hover:rotate-0 transition-transform cursor-pointer">
+                    <i class="fa-solid fa-cross text-black text-lg"></i>
                 </div>
-                <span class="font-black tracking-tighter uppercase text-lg">Pilgrims <span class="text-amber-500">Archive</span></span>
+                <div>
+                    <h1 class="font-black tracking-tighter uppercase text-xl leading-none">Pilgrims <span class="text-amber-500">Archive</span></h1>
+                    <p class="text-[8px] font-bold text-neutral-500 tracking-[0.3em] uppercase mt-1">Spiritual Year 2026</p>
+                </div>
             </div>
-            <div class="hidden md:flex gap-6 text-[10px] font-bold tracking-[0.2em] uppercase text-neutral-400">
-                <span class="text-amber-500">Engine v2.0</span>
-                <span>Spiritual Year 2026</span>
+            <div class="hidden sm:block text-right">
+                <p class="text-[10px] font-black text-neutral-400 uppercase tracking-widest">Asset Engine v2.1</p>
+                <p class="text-[9px] font-bold text-amber-500/50 uppercase tracking-[0.2em]">Orlantech Innovations</p>
             </div>
         </nav>
 
         <main class="flex-1 p-4 md:p-8 lg:p-12">
-            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-start">
 
-                <!-- Controller Side -->
-                <div class="lg:col-span-5 space-y-8">
-                    <section>
-                        <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.3em] mb-6">Asset Customization</h2>
+                <!-- Controls Column -->
+                <div class="lg:col-span-5 space-y-8 order-2 lg:order-1">
+                    <section class="space-y-6">
+                        <div class="flex items-center gap-3">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 animate-pulse"></span>
+                            <h2 class="text-xs font-black text-neutral-400 uppercase tracking-[0.4em]">Asset Parameters</h2>
+                        </div>
 
-                        <div class="space-y-5">
-                            <div class="input-group">
-                                <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Celebrant Name</label>
+                        <div class="grid grid-cols-1 gap-5">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest ml-1">Celebrant Name</label>
                                 <input type="text" id="inputName" value="Brother John Doe"
-                                    class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none font-bold uppercase text-sm transition-all">
+                                    class="w-full bg-neutral-900/50 border border-white/10 p-4 rounded-xl focus:border-amber-500 outline-none uppercase font-bold text-sm text-white">
                             </div>
 
-                            <div class="input-group">
-                                <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Family Message</label>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest ml-1">Spiritual Message</label>
                                 <textarea id="inputWishes"
-                                    class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none h-24 text-sm leading-relaxed text-neutral-300 resize-none transition-all">May your journey be filled with the warmth of His love and the strength of the Spirit. Happy Birthday from your Pilgrims Family.</textarea>
+                                    class="w-full bg-neutral-900/50 border border-white/10 p-4 rounded-xl focus:border-amber-500 outline-none h-28 text-sm text-neutral-300 leading-relaxed resize-none">May your journey be filled with the warmth of His love and the strength of the Spirit. Happy Birthday from your Pilgrims Family.</textarea>
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div class="input-group">
-                                    <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Scripture Verse</label>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest ml-1">Scripture Verse</label>
                                     <input type="text" id="inputVerse" value="The Lord is my light and my salvation."
-                                        class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none text-sm transition-all">
+                                        class="w-full bg-neutral-900/50 border border-white/10 p-4 rounded-xl focus:border-amber-500 outline-none text-sm text-white">
                                 </div>
-                                <div class="input-group">
-                                    <label class="text-[10px] font-bold text-neutral-500 uppercase mb-2 block tracking-widest transition-colors">Reference</label>
+                                <div class="space-y-2">
+                                    <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest ml-1">Reference</label>
                                     <input type="text" id="inputRef" value="Psalm 27:1"
-                                        class="w-full bg-neutral-900 border border-white/5 p-4 rounded focus:border-amber-500 outline-none text-sm font-mono text-amber-500 transition-all">
+                                        class="w-full bg-neutral-900/50 border border-white/10 p-4 rounded-xl focus:border-amber-500 outline-none text-sm font-mono text-amber-500">
                                 </div>
                             </div>
+                        </div>
 
-                            <div class="pt-4 grid grid-cols-2 gap-4">
-                                <button onclick="document.getElementById('fileInput').click()"
-                                    class="flex items-center justify-center gap-3 py-4 bg-white/5 hover:bg-white/10 border border-white/10 rounded font-black text-[10px] transition-all uppercase tracking-widest">
-                                    <i class="fa-solid fa-image text-amber-500"></i> Change Photo
-                                </button>
-                                <input type="file" id="fileInput" hidden accept="image/*">
+                        <div class="pt-6 grid grid-cols-2 gap-4">
+                            <button onclick="document.getElementById('fileInput').click()"
+                                class="flex items-center justify-center gap-3 py-5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-black text-[10px] transition-all uppercase tracking-[0.2em] group">
+                                <i class="fa-solid fa-camera text-amber-500 group-hover:scale-110 transition-transform"></i> Change Photo
+                            </button>
+                            <input type="file" id="fileInput" hidden accept="image/*">
 
-                                <button onclick="downloadPoster()"
-                                    class="flex items-center justify-center gap-3 py-4 bg-amber-500 hover:bg-amber-400 rounded font-black text-[10px] text-black transition-all uppercase tracking-widest">
-                                    <i class="fa-solid fa-cloud-arrow-down"></i> Export Asset
-                                </button>
-                            </div>
+                            <button onclick="downloadPoster()"
+                                class="flex items-center justify-center gap-3 py-5 bg-amber-500 hover:bg-amber-400 rounded-xl font-black text-[10px] text-black transition-all uppercase tracking-[0.2em] shadow-lg shadow-amber-500/20">
+                                <i class="fa-solid fa-paper-plane"></i> Export Asset
+                            </button>
                         </div>
                     </section>
 
-                    <section class="p-6 rounded border border-white/5 bg-neutral-900/50">
-                        <h3 class="text-[10px] font-black text-white uppercase tracking-widest mb-2 flex items-center gap-2">
-                            <i class="fa-solid fa-circle-info text-amber-500"></i> Digital Guidelines
-                        </h3>
-                        <p class="text-xs text-neutral-500 leading-loose">
-                            This engine generates 150DPI A5 assets optimized for WhatsApp and Telegram. Use high-resolution portraits for the best results.
+                    <footer class="p-6 rounded-2xl border border-white/5 bg-white/[0.02]">
+                        <p class="text-[9px] text-neutral-500 uppercase tracking-widest leading-loose">
+                            Designed for high-quality distribution on WhatsApp and Telegram. Best results with vertical 3:4 portrait ratios. Produced under the direction of the Spiritual Leader, Year 2026.
                         </p>
-                    </section>
+                    </footer>
                 </div>
 
-                <!-- Preview Side -->
-                <div class="lg:col-span-7 flex flex-col items-center justify-start lg:sticky lg:top-32">
-                    <div class="relative group w-full max-w-[450px]">
-                        <div class="absolute -inset-4 bg-amber-500/5 rounded-full blur-3xl opacity-50 group-hover:opacity-100 transition-opacity"></div>
-                        <canvas id="posterCanvas" class="relative"></canvas>
+                <!-- Preview Column -->
+                <div class="lg:col-span-7 flex flex-col items-center order-1 lg:order-2">
+                    <div class="relative group">
+                        <!-- Glow effect -->
+                        <div class="absolute -inset-10 bg-amber-500/10 rounded-full blur-[100px] opacity-50"></div>
+                        <canvas id="posterCanvas" class="relative z-10"></canvas>
                     </div>
 
-                    <div class="mt-8 flex gap-4">
+                    <div class="mt-10 flex items-center gap-6">
                         <div class="flex flex-col items-center">
-                            <span class="text-[8px] font-black text-neutral-600 uppercase tracking-[0.4em]">Resolution</span>
-                            <span class="text-xs font-mono text-neutral-400">874 x 1240</span>
+                            <span class="text-[8px] font-black text-neutral-600 uppercase tracking-[0.4em] mb-1">Canvas Size</span>
+                            <span class="text-xs font-mono text-neutral-400">874 × 1240 PX</span>
                         </div>
                         <div class="w-px h-8 bg-white/10"></div>
                         <div class="flex flex-col items-center">
-                            <span class="text-[8px] font-black text-neutral-600 uppercase tracking-[0.4em]">Format</span>
-                            <span class="text-xs font-mono text-neutral-400">PNG-24</span>
+                            <span class="text-[8px] font-black text-neutral-600 uppercase tracking-[0.4em] mb-1">DPI Output</span>
+                            <span class="text-xs font-mono text-neutral-400">150 HIGH-RES</span>
                         </div>
                     </div>
                 </div>
+
             </div>
         </main>
-
-        <footer class="p-8 border-t border-white/5 text-center">
-            <p class="text-[10px] font-bold text-neutral-600 uppercase tracking-[0.5em]">
-                &copy; 2026 Pilgrims Family Ministry // Orlantech Innovations
-            </p>
-        </footer>
     </div>
 
     <script>
-    const canvas = document.getElementById('posterCanvas');
-    const ctx = canvas.getContext('2d');
-    const fileInput = document.getElementById('fileInput');
+        const canvas = document.getElementById('posterCanvas');
+        const ctx = canvas.getContext('2d');
+        const fileInput = document.getElementById('fileInput');
 
-    let userImage = null;
-    // Standard A5 at 150DPI
-    const W = 874;
-    const H = 1240;
+        let userImage = null;
+        // High-Quality A5 @ 150DPI
+        const W = 874;
+        const H = 1240;
+        const AMBER = '#f59e0b';
+        const SLATE = '#0f172a';
+        const SOFT_BG = '#f8fafc';
 
-    // Set display size (CSS pixels)
-    canvas.style.width = '100%';
-    canvas.style.maxWidth = '450px';
-    // Set actual render size
-    canvas.width = W;
-    canvas.height = H;
+        canvas.width = W;
+        canvas.height = H;
 
-    function downloadPoster() {
-        const name = document.getElementById('inputName').value.trim() || 'Member';
-        const link = document.createElement('a');
-        link.download = `PF_Birthday_${name.replace(/\s+/g, '_')}_2026.png`;
-        // High quality export
-        link.href = canvas.toDataURL('image/png', 1.0);
-        link.click();
-    }
+        function draw() {
+            // 1. Foundation
+            ctx.clearRect(0, 0, W, H);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, W, H);
 
-    function draw() {
-        // Clear and Reset
-        ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = '#ffffff';
-        ctx.fillRect(0, 0, W, H);
+            // Subtle Background Border (Architectural Detail)
+            ctx.strokeStyle = '#f1f5f9';
+            ctx.lineWidth = 30;
+            ctx.strokeRect(15, 15, W - 30, H - 30);
 
-        // Grid Pattern
-        ctx.strokeStyle = 'rgba(245, 158, 11, 0.05)';
-        ctx.lineWidth = 1;
-        for(let i=0; i<W; i+=50) {
-            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, H); ctx.stroke();
-            ctx.beginPath(); ctx.moveTo(0, i); ctx.lineTo(W, i); ctx.stroke();
-        }
+            const margin = 100;
+            const leftColWidth = 350;
 
-        const margin = 80;
+            // 2. Branding Elements
+            ctx.fillStyle = AMBER;
+            ctx.fillRect(margin, 80, 45, 7);
 
-        // Branding
-        ctx.fillStyle = '#f59e0b';
-        ctx.fillRect(margin, margin, 45, 8);
-        ctx.fillStyle = '#0f172a';
-        ctx.font = '900 14px Inter';
-        ctx.textAlign = 'left';
-        ctx.fillText('PILGRIMS FAMILY // MINISTRY ASSET', margin, margin + 40);
-
-        // Main Typography
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'italic 700 120px "Playfair Display"';
-        ctx.fillText('Happy', margin - 5, 220);
-        ctx.font = '900 85px Inter';
-        ctx.letterSpacing = "-3px";
-        ctx.fillText('BIRTHDAY', margin, 305);
-        ctx.letterSpacing = "0px";
-
-        // Image Handling
-        const imgConfig = { x: 440, y: 100, w: 360, h: 750, r: 8 };
-
-        ctx.save();
-        // Modern shadow
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.15)';
-        ctx.shadowBlur = 50;
-        ctx.shadowOffsetY = 30;
-
-        // Rounded Rect Clip
-        ctx.beginPath();
-        ctx.roundRect(imgConfig.x, imgConfig.y, imgConfig.w, imgConfig.h, imgConfig.r);
-        ctx.clip();
-
-        if (userImage) {
-            const scale = Math.max(imgConfig.w / userImage.width, imgConfig.h / userImage.height);
-            const x = imgConfig.x + (imgConfig.w - userImage.width * scale) / 2;
-            const y = imgConfig.y + (imgConfig.h - userImage.height * scale) / 2;
-            ctx.drawImage(userImage, x, y, userImage.width * scale, userImage.height * scale);
-        } else {
-            ctx.fillStyle = '#f1f5f9';
-            ctx.fill();
             ctx.fillStyle = '#94a3b8';
-            ctx.font = '700 12px Inter';
-            ctx.textAlign = 'center';
-            ctx.fillText('UPLOAD PORTRAIT', imgConfig.x + imgConfig.w/2, imgConfig.y + imgConfig.h/2);
-        }
-        ctx.restore();
+            ctx.font = '900 12px Inter';
+            ctx.textAlign = 'left';
+            ctx.letterSpacing = "2px";
+            ctx.fillText('PILGRIMS FAMILY // MINISTRY ASSET', margin, 115);
+            ctx.letterSpacing = "0px";
 
-        // Name Tag
-        const name = document.getElementById('inputName').value.toUpperCase();
-        ctx.fillStyle = '#f59e0b';
-        ctx.fillRect(imgConfig.x - 20, imgConfig.y + imgConfig.h - 100, imgConfig.w + 40, 110);
-        ctx.fillStyle = '#000000';
-        ctx.textAlign = 'center';
-        ctx.font = '900 45px Inter';
-        // Auto-scale font size for long names
-        if(ctx.measureText(name).width > imgConfig.w) ctx.font = '900 32px Inter';
-        ctx.fillText(name, imgConfig.x + imgConfig.w/2, imgConfig.y + imgConfig.h - 30);
+            // 3. Header Typography
+            // Reduced sizes to prevent collision with image container
+            ctx.fillStyle = SLATE;
+            ctx.font = 'italic 700 85px "Playfair Display"';
+            ctx.fillText('Happy', margin - 5, 230);
 
-        // Body Content
-        ctx.textAlign = 'left';
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '900 12px Inter';
-        ctx.fillText('THE MESSAGE', margin, 420);
+            ctx.font = '900 68px Inter';
+            ctx.letterSpacing = "-3px";
+            ctx.fillText('BIRTHDAY', margin, 305);
+            ctx.letterSpacing = "0px";
 
-        ctx.fillStyle = '#475569';
-        ctx.font = '400 24px Inter';
-        const wishEndY = wrapText(document.getElementById('inputWishes').value, margin, 465, 320, 38);
+            // 4. Portrait Asset (The "Contain" Logic)
+            const imgBox = { x: 480, y: 80, w: 314, h: 780 };
 
-        // Scripture Block
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '900 12px Inter';
-        ctx.fillText('SCRIPTURE', margin, wishEndY + 80);
+            // Draw Container Placeholder
+            ctx.fillStyle = SOFT_BG;
+            ctx.beginPath();
+            ctx.roundRect(imgBox.x, imgBox.y, imgBox.w, imgBox.h, 12);
+            ctx.fill();
 
-        ctx.fillStyle = '#0f172a';
-        ctx.font = 'italic 700 32px "Playfair Display"';
-        const verseText = `"${document.getElementById('inputVerse').value}"`;
-        const verseEndY = wrapText(verseText, margin, wishEndY + 130, 320, 42);
+            if (userImage) {
+                const imgRatio = userImage.width / userImage.height;
+                const boxRatio = imgBox.w / imgBox.h;
+                let renderW, renderH;
 
-        ctx.fillStyle = '#f59e0b';
-        ctx.font = '900 18px Inter';
-        ctx.fillText(`— ${document.getElementById('inputRef').value.toUpperCase()}`, margin, verseEndY + 50);
+                // Mathematical "Contain" Scaling
+                if (imgRatio > boxRatio) {
+                    renderW = imgBox.w;
+                    renderH = imgBox.w / imgRatio;
+                } else {
+                    renderH = imgBox.h;
+                    renderW = imgBox.h * imgRatio;
+                }
 
-        // Global Footer
-        ctx.fillStyle = '#cbd5e1';
-        ctx.font = '800 11px Inter';
-        ctx.textAlign = 'left';
-        ctx.fillText('© 2026 ORLANTECH INNOVATIONS', margin, H - margin);
-        ctx.textAlign = 'right';
-        ctx.fillText('SECURE DIGITAL ASSET // V2.0', W - margin, H - margin);
-    }
+                const offsetX = imgBox.x + (imgBox.w - renderW) / 2;
+                const offsetY = imgBox.y + (imgBox.h - renderH) / 2;
 
-    // Helper: Modern Text Wrapper
-    function wrapText(text, x, y, maxWidth, lineHeight) {
-        const words = text.split(' ');
-        let line = '';
-        let testY = y;
-        for (let n = 0; n < words.length; n++) {
-            let testLine = line + words[n] + ' ';
-            if (ctx.measureText(testLine).width > maxWidth && n > 0) {
-                ctx.fillText(line.trim(), x, testY);
-                line = words[n] + ' ';
-                testY += lineHeight;
+                ctx.save();
+                ctx.beginPath();
+                ctx.roundRect(imgBox.x, imgBox.y, imgBox.w, imgBox.h, 12);
+                ctx.clip();
+                ctx.drawImage(userImage, offsetX, offsetY, renderW, renderH);
+                ctx.restore();
             } else {
-                line = testLine;
+                ctx.fillStyle = '#cbd5e1';
+                ctx.font = '700 12px Inter';
+                ctx.textAlign = 'center';
+                ctx.fillText('ASSET PREVIEW', imgBox.x + imgBox.w/2, imgBox.y + imgBox.h/2);
             }
+
+            // 5. Dynamic Name Tag
+            const name = (document.getElementById('inputName').value || 'MEMBER').toUpperCase();
+            ctx.fillStyle = AMBER;
+            // Name tag overlaps container bottom for style
+            ctx.fillRect(imgBox.x - 20, imgBox.y + imgBox.h - 110, imgBox.w + 40, 120);
+
+            ctx.fillStyle = '#000000';
+            ctx.textAlign = 'center';
+            ctx.font = '900 40px Inter';
+            // Auto-scale for long names
+            const nameWidth = ctx.measureText(name).width;
+            if (nameWidth > imgBox.w + 10) ctx.font = '900 26px Inter';
+            ctx.fillText(name, imgBox.x + imgBox.w/2, imgBox.y + imgBox.h - 35);
+
+            // 6. Message & Scripture Column
+            ctx.textAlign = 'left';
+            let currentY = 410;
+
+            // Message Header
+            ctx.fillStyle = AMBER;
+            ctx.font = '900 11px Inter';
+            ctx.letterSpacing = "1.5px";
+            ctx.fillText('MISSION MESSAGE', margin, currentY);
+            ctx.letterSpacing = "0px";
+
+            // Message Body
+            ctx.fillStyle = '#475569';
+            ctx.font = '400 22px Inter';
+            currentY = wrapText(document.getElementById('inputWishes').value, margin, currentY + 45, leftColWidth, 34);
+
+            // Scripture Divider
+            currentY += 85;
+            ctx.fillStyle = AMBER;
+            ctx.font = '900 11px Inter';
+            ctx.letterSpacing = "1.5px";
+            ctx.fillText('SACRED TEXT', margin, currentY);
+            ctx.letterSpacing = "0px";
+
+            // Scripture Body
+            ctx.fillStyle = SLATE;
+            ctx.font = 'italic 700 32px "Playfair Display"';
+            const verseText = `"${document.getElementById('inputVerse').value}"`;
+            currentY = wrapText(verseText, margin, currentY + 50, leftColWidth, 42);
+
+            // Scripture Reference
+            ctx.fillStyle = AMBER;
+            ctx.font = '900 18px Inter';
+            ctx.fillText(`— ${document.getElementById('inputRef').value.toUpperCase()}`, margin, currentY + 55);
+
+            // 7. Global Footer Branding
+            ctx.fillStyle = '#cbd5e1';
+            ctx.font = '800 11px Inter';
+            ctx.textAlign = 'left';
+            ctx.fillText('© WHILE PILGRIMS HERE WE JOURNEY ON', margin, H - 80);
+
+            ctx.textAlign = 'right';
+            ctx.fillText('PRODUCED FOR PILGRIMS FAMILY', W - 80, H - 80);
         }
-        ctx.fillText(line.trim(), x, testY);
-        return testY;
-    }
 
-    // Update triggers
-    ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
-        document.getElementById(id).addEventListener('input', draw);
-    });
-
-    fileInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                const img = new Image();
-                img.onload = () => { userImage = img; draw(); };
-                img.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
+        // Reliable Text Wrapping Logic
+        function wrapText(text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let lastY = y;
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, lastY);
+                    line = words[n] + ' ';
+                    lastY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line.trim(), x, lastY);
+            return lastY;
         }
-    });
 
-    document.fonts.ready.then(draw);
-</script>
+        // Asset Export
+        function downloadPoster() {
+            const name = document.getElementById('inputName').value.trim() || 'Pilgrim';
+            const link = document.createElement('a');
+            link.download = `PF_Bday_2026_${name.replace(/\s+/g, '_')}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        }
+
+        // Reactive Triggers
+        ['inputName', 'inputVerse', 'inputRef', 'inputWishes'].forEach(id => {
+            document.getElementById(id).addEventListener('input', draw);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const img = new Image();
+                    img.onload = () => {
+                        userImage = img;
+                        draw();
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Initialize on font load
+        document.fonts.ready.then(() => {
+            draw();
+        });
+    </script>
 </body>
 </html>
