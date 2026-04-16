@@ -171,9 +171,7 @@
             ctx.fillText('PILGRIMS FAMILY // 2026', centerX, 62);
             ctx.letterSpacing = "0px";
 
-            // PHOTO FRAME - Balanced 3:4 (approx 600x800)
-            const imgBox = { w: 840, h: 630, x: 80, y: 100 }; // 4:3 Wide variant for balance
-            // Adjusting to 3:4 vertical as requested but sized for the canvas width
+            // PHOTO FRAME - Balanced 3:4
             const frameW = 600;
             const frameH = 800;
             const frameX = (W - frameW) / 2;
@@ -211,7 +209,7 @@
                 ctx.restore();
             }
 
-            // Name Banner (Overlaying bottom of photo)
+            // Name Banner
             const name = (document.getElementById('inputName').value || 'MEMBER').toUpperCase();
 
             ctx.save();
@@ -230,43 +228,43 @@
             ctx.fillText(name, centerX, frameY + frameH + 15);
             ctx.letterSpacing = "0px";
 
-            // Text Content Section
-            let currentY = frameY + frameH + 120;
+            // Text Content Section - Start after Name Banner
+            let currentY = frameY + frameH + 110;
 
             // Birthday Title
             ctx.fillStyle = SLATE;
-            ctx.font = 'italic 700 40px "Playfair Display"';
+            ctx.font = 'italic 700 38px "Playfair Display"';
             ctx.fillText('Happy Birthday', centerX, currentY);
 
-            currentY += 60;
+            currentY += 50;
             ctx.fillStyle = '#475569';
             ctx.font = '400 24px Inter';
-            currentY = wrapText(document.getElementById('inputWishes').value, centerX, currentY, 700, 36, true);
+            currentY = wrapText(document.getElementById('inputWishes').value, centerX, currentY, 700, 34, true);
 
-            currentY += 80;
-            // Divider
+            // Dynamic Divider Location
+            currentY += 60;
             ctx.strokeStyle = '#e2e8f0';
             ctx.lineWidth = 1;
             ctx.beginPath();
-            ctx.moveTo(centerX - 100, currentY);
-            ctx.lineTo(centerX + 100, currentY);
+            ctx.moveTo(centerX - 80, currentY);
+            ctx.lineTo(centerX + 80, currentY);
             ctx.stroke();
 
-            currentY += 60;
+            currentY += 50;
             ctx.fillStyle = SLATE;
-            ctx.font = 'italic 700 32px "Playfair Display"';
+            ctx.font = 'italic 700 30px "Playfair Display"';
             const verseText = `"${document.getElementById('inputVerse').value}"`;
-            currentY = wrapText(verseText, centerX, currentY, 750, 42, true);
+            currentY = wrapText(verseText, centerX, currentY, 750, 40, true);
 
             ctx.fillStyle = AMBER;
-            ctx.font = '900 20px Inter';
-            ctx.fillText(`${document.getElementById('inputRef').value.toUpperCase()}`, centerX, currentY + 50);
+            ctx.font = '900 18px Inter';
+            ctx.fillText(`${document.getElementById('inputRef').value.toUpperCase()}`, centerX, currentY + 45);
 
-            // Footer
+            // Footer - Fixed safe position at bottom
             ctx.fillStyle = '#94a3b8';
             ctx.font = '800 12px Inter';
             ctx.letterSpacing = "2px";
-            ctx.fillText('PILGRIMS FAMILY • SPIRITUAL YEAR 2026', centerX, H - 60);
+            ctx.fillText('PILGRIMS FAMILY • SPIRITUAL YEAR 2026', centerX, H - 50);
         }
 
         function wrapText(text, x, y, maxWidth, lineHeight, isCentered = false) {
