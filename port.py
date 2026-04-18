@@ -2,7 +2,7 @@
 import socket
 def port_scanner():
     target= input("Enter the target IP address: ")
-    print(f"============\nScanning {target}...\n======================")
+    print(f"============\nScanning {target}...\n=====\n for ports ranging 1-1025=================")
 
     for port in range(1,1025):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
