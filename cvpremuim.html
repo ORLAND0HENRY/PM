@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kevin Otieno | Procurement Specialist CV</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+
+        :root {
+            --brand-amber: #f59e0b;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            -webkit-print-color-adjust: exact;
+        }
+
+        @media print {
+            .no-print { display: none; }
+            body { background: white; }
+            .cv-container {
+                box-shadow: none;
+                margin: 0;
+                width: 100%;
+                max-width: 210mm;
+            }
+            @page { size: A4; margin: 0; }
+        }
+
+        /* Custom scrollbar for web preview */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: var(--brand-amber); border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-slate-50 md:py-10 text-slate-900">
+
+    <!-- Action Bar (Web Only) -->
+    <div class="max-w-5xl mx-auto mb-6 px-4 no-print flex justify-between items-center">
+        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">CV Preview Mode</h2>
+        <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-white px-5 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Export PDF
+        </button>
+    </div>
+
+    <!-- Main CV Wrapper -->
+    <div class="cv-container max-w-5xl mx-auto bg-white shadow-2xl min-h-[297mm] flex flex-col md:flex-row overflow-hidden border border-slate-200 md:rounded-xl">
+
+        <!-- Sidebar / Contact Info -->
+        <aside class="w-full md:w-[35%] bg-slate-900 text-white p-8 md:p-10 flex flex-col">
+            <div class="text-center md:text-left mb-10">
+                <div class="relative inline-block md:block mb-6">
+                    <div class="w-32 h-32 md:w-36 md:h-36 rounded-2xl border-2 border-amber-500/30 mx-auto md:mx-0 bg-slate-800 flex items-center justify-center text-5xl font-black text-amber-500 shadow-2xl rotate-3 hover:rotate-0 transition-transform duration-300">
+                        KO
+                    </div>
+                    <div class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">Verified</div>
+                </div>
+                <h1 class="text-3xl font-extrabold uppercase tracking-tight leading-none mb-2">Kevin<br/><span class="text-amber-500">Otieno</span></h1>
+                <p class="text-slate-400 text-xs font-semibold uppercase tracking-[0.2em]">Procurement Specialist</p>
+            </div>
+
+            <div class="space-y-10">
+                <!-- About Section -->
+                <section>
+                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-white/10 pb-2">About Me</h2>
+                    <p class="text-xs text-slate-300 leading-relaxed text-justify opacity-90">
+                        Dedicated supply chain expert with a robust track record in the Kenyan corporate sector. I leverage strategic sourcing and analytical rigor to optimize organizational spend and operational efficiency.
+                    </p>
+                </section>
+
+                <section>
+                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-white/10 pb-2">Connect</h2>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-amber-500 text-[10px]">📍</div>
+                            <span class="text-[11px] text-slate-300">Kilimani, Nairobi, KE</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-amber-500 text-[10px]">📞</div>
+                            <span class="text-[11px] text-slate-300">+254 744 555 666</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-amber-500 text-[10px]">✉️</div>
+                            <span class="text-[11px] text-slate-300">kevin.o@pro-kenya.com</span>
+                        </div>
+                    </div>
+                </section>
+
+                <section>
+                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-white/10 pb-2">Mastery</h2>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">Strategic Sourcing</span>
+                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">Budget Management</span>
+                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">SAP / ERP</span>
+                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">Risk Mitigation</span>
+                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">KISM Compliance</span>
+                    </div>
+                </section>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="w-full md:w-[65%] p-8 md:p-12">
+
+            <section class="mb-12">
+                <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-4">
+                    Professional Profile
+                    <span class="h-[1px] bg-slate-100 flex-grow"></span>
+                </h2>
+                <p class="text-sm text-slate-600 leading-relaxed text-justify">
+                    A result-oriented Procurement Professional with a decade of experience in the Kenyan logistics and hospitality industries. Expert in managing high-volume supply chains and reducing operational costs through strategic vendor partnerships. Certified member of the <strong class="text-slate-800">Kenya Institute of Supplies Management (KISM)</strong>.
+                </p>
+            </section>
+
+            <section class="mb-12">
+                <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
+                    Career Progression
+                    <span class="h-[1px] bg-slate-100 flex-grow"></span>
+                </h2>
+
+                <div class="space-y-10">
+                    <!-- Exp Item -->
+                    <div class="relative pl-6 border-l-2 border-slate-100">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-amber-500 border-4 border-white shadow-sm"></div>
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-baseline mb-3 gap-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">Procurement Manager</h3>
+                                <p class="text-xs font-medium text-slate-500">Safaricom PLC | Nairobi</p>
+                            </div>
+                            <span class="text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-100 whitespace-nowrap">2021 — PRESENT</span>
+                        </div>
+                        <ul class="text-[13px] text-slate-600 space-y-3">
+                            <li class="flex gap-2">
+                                <span class="text-amber-500 mt-1">▹</span>
+                                <span>Managed an annual procurement budget of <strong>KES 500M</strong> with a verified 12% cost-saving achievement through aggressive tender optimization.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="text-amber-500 mt-1">▹</span>
+                                <span>Spearheaded digital transformation for the supply chain unit, implementing an automated e-procurement suite reducing lead times by 40%.</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Exp Item -->
+                    <div class="relative pl-6 border-l-2 border-slate-100">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white"></div>
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-baseline mb-3 gap-2">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-800">Assistant Supply Chain Officer</h3>
+                                <p class="text-xs font-medium text-slate-500">Serena Hotels | Nairobi & Mombasa</p>
+                            </div>
+                            <span class="text-[10px] font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap">2017 — 2021</span>
+                        </div>
+                        <ul class="text-[13px] text-slate-600 space-y-3">
+                            <li class="flex gap-2">
+                                <span class="text-amber-500 mt-1">▹</span>
+                                <span>Negotiated long-term contracts with local agricultural clusters, directly supporting the <strong>'Buy Kenya, Build Kenya'</strong> government initiative.</span>
+                            </li>
+                            <li class="flex gap-2">
+                                <span class="text-amber-500 mt-1">▹</span>
+                                <span>Reduced inventory shrinkage and stock-outs by 30% through the implementation of real-time tracking protocols.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-4">
+                    Academic Foundation
+                    <span class="h-[1px] bg-slate-100 flex-grow"></span>
+                </h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <p class="text-xs font-bold text-amber-600 mb-1">GRADUATED 2019</p>
+                        <p class="font-bold text-slate-800 text-sm">MSc in Procurement & Logistics</p>
+                        <p class="text-xs text-slate-500 italic">Jomo Kenyatta University (JKUAT)</p>
+                    </div>
+                    <div class="bg-slate-50 p-4 rounded-lg border border-slate-100">
+                        <p class="text-xs font-bold text-amber-600 mb-1">GRADUATED 2015</p>
+                        <p class="font-bold text-slate-800 text-sm">Bachelors in Commerce</p>
+                        <p class="text-xs text-slate-500 italic">University of Nairobi (UoN)</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer Meta -->
+    <div class="max-w-5xl mx-auto mt-8 px-4 text-center text-[10px] text-slate-400 uppercase tracking-widest no-print pb-10">
+        Generated by Orlantech Innovations CV Suite &copy; 2026
+    </div>
+</body>
+</html>
