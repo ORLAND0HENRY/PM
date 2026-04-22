@@ -2,104 +2,201 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>ORLANTECH // PORTRAIT EDITOR</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        .duotone-container { position: relative; width: 100%; height: 100%; }
-        .base-image { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; 
-            filter: grayscale(1) contrast(120%) brightness(100%);
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800;900&display=swap');
+
+        :root { --amber-500: #f59e0b; }
+        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+
+        .glass-panel {
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .multiply-layer { 
-            position: absolute; 
-            inset: 0; 
-            background-color: #f59e0b; 
-            mix-blend-mode: multiply; 
-            opacity: 0.8; 
+
+        .custom-slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 4px;
+            background: #262626;
+            border-radius: 2px;
+            outline: none;
         }
-        .screen-layer { 
-            position: absolute; 
-            inset: 0; 
-            background-color: #d97706; 
-            mix-blend-mode: screen; 
-            opacity: 0.2; 
+
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            background: var(--amber-500);
+            border-radius: 50%;
+            cursor: pointer;
+            border: 3px solid #171717;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
         }
+
+        .preview-canvas-container {
+            position: relative;
+            width: 100%;
+            padding-top: 100%; /* 1:1 Aspect Ratio */
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+
+        .preview-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        #mainImage {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: filter 0.1s ease-out;
+        }
+
+        .multiply-layer { mix-blend-mode: multiply; }
+        .screen-layer { mix-blend-mode: screen; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade { animation: fadeIn 0.4s ease forwards; }
     </style>
 </head>
-<body class="bg-neutral-950 text-white min-h-screen flex flex-col items-center justify-center p-4">
+<body class="bg-black text-neutral-200 min-h-screen flex flex-col items-center">
 
-    <div class="w-full max-w-md bg-neutral-900 rounded-[2.5rem] p-8 shadow-2xl border border-white/5">
-        <header class="mb-8 text-center">
-            <h1 class="text-2xl font-black text-amber-500 uppercase tracking-tighter">Portrait Editor</h1>
-            <p class="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em]">Orlantech Innovations Tooling</p>
+    <main class="w-full max-w-lg px-4 py-8 md:py-12 flex flex-col gap-6">
+        <!-- Header -->
+        <header class="flex flex-col items-center text-center gap-1">
+            <div class="bg-amber-500/10 px-3 py-1 rounded-full mb-2">
+                <span class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em]">Orlantech System</span>
+            </div>
+            <h1 class="text-3xl font-black text-white uppercase tracking-tighter italic">Portrait Editor</h1>
+            <p class="text-neutral-500 text-[10px] font-bold uppercase tracking-[0.2em]">High-Fidelity Filter Suite</p>
         </header>
 
-        <!-- Preview Area -->
-        <div id="dropZone" class="relative aspect-square w-full rounded-3xl bg-black overflow-hidden border-2 border-dashed border-neutral-800 flex items-center justify-center mb-8 transition-all">
-            <div id="placeholder" class="flex flex-col items-center text-neutral-600">
-                <i data-lucide="camera" class="w-12 h-12 mb-2 stroke-1"></i>
-                <span class="text-xs font-bold uppercase tracking-widest">Select Portrait</span>
+        <!-- Preview Section -->
+        <section id="dropZone" class="glass-panel rounded-[2.5rem] p-4 md:p-6 shadow-2xl relative">
+            <div class="preview-canvas-container bg-neutral-900 border border-white/5">
+                <!-- Empty State -->
+                <div id="placeholder" class="absolute inset-0 flex flex-col items-center justify-center text-neutral-600">
+                    <div class="w-16 h-16 rounded-full bg-neutral-800 flex items-center justify-center mb-4">
+                        <i data-lucide="image-plus" class="w-8 h-8 text-neutral-500"></i>
+                    </div>
+                    <span class="text-xs font-bold uppercase tracking-widest">Awaiting Media</span>
+                </div>
+
+                <!-- Active State -->
+                <div id="previewWrapper" class="hidden absolute inset-0">
+                    <img id="mainImage" src="" alt="Source">
+                    <div id="layerMultiply" class="preview-layer multiply-layer bg-amber-500 opacity-80"></div>
+                    <div id="layerScreen" class="preview-layer screen-layer bg-amber-600 opacity-20"></div>
+                </div>
             </div>
-            <div id="previewWrapper" class="hidden w-full h-full relative">
-                <img id="mainImage" class="base-image" src="" alt="">
-                <div class="multiply-layer"></div>
-                <div class="screen-layer"></div>
+        </section>
+
+        <!-- Controls -->
+        <div id="editorUI" class="hidden animate-fade space-y-6">
+            <div class="grid grid-cols-1 gap-4">
+                <!-- Contrast -->
+                <div class="glass-panel p-5 rounded-2xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-neutral-400">Contrast</label>
+                        <span id="contrastVal" class="text-amber-500 text-xs font-mono">120%</span>
+                    </div>
+                    <input type="range" id="contrastRange" min="50" max="250" value="120" class="custom-slider">
+                </div>
+
+                <!-- Brightness -->
+                <div class="glass-panel p-5 rounded-2xl space-y-3">
+                    <div class="flex justify-between items-center">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-neutral-400">Brightness</label>
+                        <span id="brightnessVal" class="text-amber-500 text-xs font-mono">100%</span>
+                    </div>
+                    <input type="range" id="brightnessRange" min="50" max="150" value="100" class="custom-slider">
+                </div>
+            </div>
+
+            <!-- Action Bar -->
+            <div class="flex gap-3">
+                <button onclick="resetEditor()" class="flex-1 bg-neutral-900 hover:bg-neutral-800 border border-white/5 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all text-xs font-bold uppercase tracking-widest text-neutral-400">
+                    <i data-lucide="x" class="w-4 h-4"></i> Reset
+                </button>
+                <button onclick="openExportModal()" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-black py-4 rounded-2xl flex items-center justify-center gap-2 transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-amber-500/20">
+                    <i data-lucide="download" class="w-4 h-4"></i> Export Edit
+                </button>
             </div>
         </div>
+
+        <!-- Initial Upload Trigger -->
+        <button id="uploadBtn" onclick="document.getElementById('fileInput').click()" class="w-full py-6 bg-amber-500 text-black rounded-2xl flex items-center justify-center gap-3 transition-transform active:scale-95 text-sm font-black uppercase tracking-widest shadow-xl shadow-amber-500/10">
+            <i data-lucide="camera" class="w-6 h-6"></i> Open Media Gallery
+        </button>
 
         <input type="file" id="fileInput" class="hidden" accept="image/*">
 
-        <!-- Controls -->
-        <div id="controls" class="hidden space-y-6">
-            <div class="space-y-3">
-                <div class="flex justify-between text-[10px] font-black uppercase tracking-widest text-neutral-500">
-                    <span>Contrast Strength</span>
-                    <span id="contrastVal" class="text-amber-500">120%</span>
-                </div>
-                <input type="range" id="contrastRange" min="50" max="200" value="120" 
-                    class="w-full h-1.5 bg-neutral-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+        <!-- Footer -->
+        <footer class="mt-4 flex flex-col items-center gap-4">
+            <div class="flex items-center gap-4 text-neutral-700">
+                <div class="h-[1px] w-12 bg-neutral-800"></div>
+                <span class="text-[9px] font-black uppercase tracking-[0.5em]">Pilgrim Family MMXXVI</span>
+                <div class="h-[1px] w-12 bg-neutral-800"></div>
             </div>
+        </footer>
+    </main>
 
-            <div class="flex gap-3 pt-2">
-                <button onclick="resetEditor()" class="flex-1 bg-neutral-800 hover:bg-neutral-700 py-4 rounded-2xl flex items-center justify-center gap-2 transition-all text-xs font-bold uppercase tracking-widest">
-                    <i data-lucide="refresh-cw" class="w-4 h-4"></i> Reset
-                </button>
-                <button onclick="alert('Screenshot the preview area to save your high-res edit!')" class="flex-[2] bg-amber-500 hover:bg-amber-600 text-black py-4 rounded-2xl flex items-center justify-center gap-2 transition-all text-xs font-black uppercase tracking-widest shadow-lg shadow-amber-500/20">
-                    <i data-lucide="check-circle" class="w-4 h-4"></i> Apply Filter
-                </button>
+    <!-- Modal for Instructions -->
+    <div id="exportModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-xs rounded-[2rem] p-8 text-center animate-fade">
+            <div class="w-16 h-16 bg-amber-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i data-lucide="smartphone" class="w-8 h-8 text-amber-500"></i>
             </div>
+            <h3 class="text-xl font-black text-white mb-2 uppercase italic">Ready for Export</h3>
+            <p class="text-neutral-400 text-xs leading-relaxed mb-6">
+                To maintain maximum fidelity, please <span class="text-amber-500 font-bold">Screenshot</span> your preview now. Orlantech's high-res export engine is coming in the next update.
+            </p>
+            <button onclick="closeExportModal()" class="w-full py-4 bg-neutral-800 hover:bg-neutral-700 rounded-xl text-[10px] font-black uppercase tracking-widest">
+                Return to Editor
+            </button>
         </div>
-
-        <button id="uploadBtn" onclick="document.getElementById('fileInput').click()" class="w-full py-5 bg-neutral-800 hover:bg-neutral-700 rounded-2xl flex items-center justify-center gap-3 transition-all text-sm font-bold uppercase tracking-widest border border-white/5">
-            <i data-lucide="upload" class="w-5 h-5"></i> Choose Image
-        </button>
-    </div>
-
-    <div class="mt-8 flex items-center gap-3 text-neutral-700">
-        <div class="w-8 h-[1px] bg-neutral-800"></div>
-        <span class="text-[10px] font-black uppercase tracking-[0.4em]">Pilgrim Family 2026</span>
-        <div class="w-8 h-[1px] bg-neutral-800"></div>
     </div>
 
     <script>
-        // Initialize Icons
+        // Init Lucide
         lucide.createIcons();
 
         const fileInput = document.getElementById('fileInput');
         const mainImage = document.getElementById('mainImage');
         const previewWrapper = document.getElementById('previewWrapper');
         const placeholder = document.getElementById('placeholder');
-        const controls = document.getElementById('controls');
+        const editorUI = document.getElementById('editorUI');
         const uploadBtn = document.getElementById('uploadBtn');
+        const exportModal = document.getElementById('exportModal');
+
+        // Ranges
         const contrastRange = document.getElementById('contrastRange');
         const contrastVal = document.getElementById('contrastVal');
-        const dropZone = document.getElementById('dropZone');
+        const brightnessRange = document.getElementById('brightnessRange');
+        const brightnessVal = document.getElementById('brightnessVal');
+
+        let currentSettings = {
+            contrast: 120,
+            brightness: 100
+        };
+
+        function updateFilters() {
+            mainImage.style.filter = `grayscale(1) contrast(${currentSettings.contrast}%) brightness(${currentSettings.brightness}%)`;
+        }
 
         fileInput.addEventListener('change', function(e) {
             const file = e.target.files[0];
@@ -109,19 +206,24 @@
                     mainImage.src = event.target.result;
                     previewWrapper.classList.remove('hidden');
                     placeholder.classList.add('hidden');
-                    controls.classList.remove('hidden');
+                    editorUI.classList.remove('hidden');
                     uploadBtn.classList.add('hidden');
-                    dropZone.classList.remove('border-dashed');
-                    dropZone.classList.add('border-solid', 'border-white/10');
+                    updateFilters();
                 };
                 reader.readAsDataURL(file);
             }
         });
 
-        contrastRange.addEventListener('input', function(e) {
-            const val = e.target.value;
-            contrastVal.innerText = val + '%';
-            mainImage.style.filter = `grayscale(1) contrast(${val}%) brightness(100%)`;
+        contrastRange.addEventListener('input', (e) => {
+            currentSettings.contrast = e.target.value;
+            contrastVal.innerText = `${e.target.value}%`;
+            updateFilters();
+        });
+
+        brightnessRange.addEventListener('input', (e) => {
+            currentSettings.brightness = e.target.value;
+            brightnessVal.innerText = `${e.target.value}%`;
+            updateFilters();
         });
 
         function resetEditor() {
@@ -129,11 +231,31 @@
             mainImage.src = '';
             previewWrapper.classList.add('hidden');
             placeholder.classList.remove('hidden');
-            controls.classList.add('hidden');
+            editorUI.classList.add('hidden');
             uploadBtn.classList.remove('hidden');
-            dropZone.classList.add('border-dashed');
-            dropZone.classList.remove('border-solid', 'border-white/10');
+
+            // Reset values
+            currentSettings = { contrast: 120, brightness: 100 };
+            contrastRange.value = 120;
+            brightnessRange.value = 100;
+            contrastVal.innerText = '120%';
+            brightnessVal.innerText = '100%';
         }
+
+        function openExportModal() {
+            exportModal.classList.remove('hidden');
+            exportModal.classList.add('flex');
+        }
+
+        function closeExportModal() {
+            exportModal.classList.add('hidden');
+            exportModal.classList.remove('flex');
+        }
+
+        // Close modal on escape
+        window.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') closeExportModal();
+        });
     </script>
 </body>
 </html>
