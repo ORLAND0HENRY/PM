@@ -3,15 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kevin Otieno | Interactive CV Editor</title>
+    <title>Kevin Otieno | Premium Interactive CV</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
 
         :root { --brand-amber: #f59e0b; }
-        body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; }
+        body { font-family: 'Inter', sans-serif; -webkit-print-color-adjust: exact; scroll-behavior: smooth; }
 
-        /* Editable Area Styling */
+        /* Interactive States */
+        [contenteditable="true"] { transition: all 0.2s ease; border-radius: 4px; }
         [contenteditable="true"]:hover {
             outline: 2px dashed var(--brand-amber);
             outline-offset: 4px;
@@ -20,146 +21,197 @@
         [contenteditable="true"]:focus {
             outline: 2px solid var(--brand-amber);
             background: rgba(245, 158, 11, 0.05);
-            border-radius: 4px;
         }
 
+        /* Print Logic */
         @media print {
             .no-print { display: none !important; }
             body { background: white; padding: 0; }
             .cv-container { box-shadow: none; margin: 0; width: 100%; max-width: 210mm; border: none; border-radius: 0; }
             [contenteditable="true"]:hover { outline: none; }
+            .sidebar { width: 35% !important; }
+            .main-content { width: 65% !important; }
             @page { size: A4; margin: 0; }
         }
 
+        /* Custom scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: var(--brand-amber); border-radius: 10px; }
+
+        .skill-tag:hover .remove-skill { opacity: 1; }
     </style>
 </head>
-<body class="bg-slate-50 md:py-10 text-slate-900">
+<body class="bg-slate-100 md:py-10 text-slate-900">
 
     <!-- Action Bar -->
     <div class="max-w-5xl mx-auto mb-6 px-4 no-print flex flex-wrap justify-between items-center gap-4">
-        <div>
-            <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Interactive Editor</h2>
-            <p class="text-[10px] text-amber-600 font-medium">Click any text to edit directly</p>
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-slate-900 rounded-lg flex items-center justify-center shadow-lg">
+                <span class="text-amber-500 font-black text-xl">O</span>
+            </div>
+            <div>
+                <h2 class="text-sm font-bold uppercase tracking-widest text-slate-500 leading-none">Orlantech CV Suite</h2>
+                <p class="text-[10px] text-amber-600 font-medium mt-1">Interactive Production Environment</p>
+            </div>
         </div>
-        <button onclick="window.print()" class="bg-amber-500 hover:bg-amber-600 text-white px-6 py-2 rounded-full font-bold text-sm transition-all flex items-center gap-2 shadow-lg shadow-amber-500/20">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-            Export PDF
-        </button>
+        <div class="flex gap-3">
+            <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-xl font-bold text-sm transition-all flex items-center gap-2 shadow-xl shadow-slate-900/10">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"></path><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                Export PDF
+            </button>
+        </div>
     </div>
 
     <!-- Main CV Wrapper -->
-    <div class="cv-container max-w-5xl mx-auto bg-white shadow-2xl min-h-[297mm] flex flex-col md:flex-row overflow-hidden border border-slate-200 md:rounded-xl">
+    <div class="cv-container max-w-5xl mx-auto bg-white shadow-2xl min-h-[297mm] flex flex-col md:flex-row overflow-hidden border border-slate-200 md:rounded-2xl">
 
         <!-- Sidebar -->
-        <aside class="w-full md:w-[35%] bg-slate-900 text-white p-8 md:p-10 flex flex-col">
+        <aside class="sidebar w-full md:w-[35%] bg-slate-900 text-white p-8 md:p-10 flex flex-col">
             <div class="text-center md:text-left mb-10">
                 <!-- Profile Picture Upload -->
-                <div class="relative inline-block md:block mb-6 group">
+                <div class="relative inline-block md:block mb-8 group">
                     <input type="file" id="photo-upload" class="hidden" accept="image/*" onchange="handleImageUpload(event)">
-                    <div onclick="document.getElementById('photo-upload').click()" class="w-32 h-32 md:w-36 md:h-36 rounded-2xl border-2 border-amber-500/30 mx-auto md:mx-0 bg-slate-800 flex items-center justify-center overflow-hidden cursor-pointer shadow-2xl rotate-3 hover:rotate-0 transition-all duration-300">
+                    <div onclick="document.getElementById('photo-upload').click()" class="w-32 h-32 md:w-40 md:h-40 rounded-3xl border-2 border-amber-500/30 mx-auto md:mx-0 bg-slate-800 flex items-center justify-center overflow-hidden cursor-pointer shadow-2xl rotate-2 hover:rotate-0 transition-all duration-500 group">
                         <img id="profile-img" src="" class="hidden w-full h-full object-cover">
-                        <span id="profile-initials" class="text-5xl font-black text-amber-500">KO</span>
-                        <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity no-print">
-                            <span class="text-[10px] font-bold uppercase tracking-tighter">Change Photo</span>
+                        <span id="profile-initials" class="text-6xl font-black text-amber-500">KO</span>
+                        <div class="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-all no-print">
+                            <div class="text-center">
+                                <svg class="mx-auto mb-1 text-amber-500" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+                                <span class="text-[9px] font-black uppercase tracking-widest text-white">Upload</span>
+                            </div>
                         </div>
                     </div>
-                    <div class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-900 text-[10px] font-black px-2 py-1 rounded uppercase tracking-tighter">Verified</div>
+                    <div class="absolute -bottom-2 -right-2 bg-amber-500 text-slate-900 text-[10px] font-black px-3 py-1.5 rounded-lg shadow-lg uppercase tracking-tighter">Identity Verified</div>
                 </div>
 
-                <h1 contenteditable="true" class="text-3xl font-extrabold uppercase tracking-tight leading-none mb-2">Kevin<br/><span class="text-amber-500">Otieno</span></h1>
-                <p contenteditable="true" class="text-slate-400 text-xs font-semibold uppercase tracking-[0.2em]">Procurement Specialist</p>
+                <h1 contenteditable="true" spellcheck="false" class="text-3xl font-extrabold uppercase tracking-tight leading-none mb-3">Kevin<br/><span class="text-amber-500">Otieno</span></h1>
+                <p contenteditable="true" spellcheck="false" class="text-slate-400 text-[11px] font-bold uppercase tracking-[0.3em]">Procurement Specialist</p>
             </div>
 
-            <div class="space-y-10">
+            <div class="space-y-12">
                 <section>
-                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-white/10 pb-2">About Me</h2>
-                    <p contenteditable="true" class="text-xs text-slate-300 leading-relaxed text-justify opacity-90">
+                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4 border-b border-white/10 pb-2">About Me</h2>
+                    <p contenteditable="true" class="text-xs text-slate-300 leading-relaxed text-justify opacity-80 font-light">
                         Dedicated supply chain expert with a robust track record in the Kenyan corporate sector. I leverage strategic sourcing and analytical rigor to optimize organizational spend and operational efficiency.
                     </p>
                 </section>
 
                 <section>
-                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-white/10 pb-2">Connect</h2>
-                    <div class="space-y-3">
-                        <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-amber-500 text-[10px]">📍</div>
-                            <span contenteditable="true" class="text-[11px] text-slate-300">Kilimani, Nairobi, KE</span>
+                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.4em] mb-4 border-b border-white/10 pb-2">Connect</h2>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500 text-xs shadow-inner">📍</div>
+                            <span contenteditable="true" class="text-[11px] text-slate-300 font-medium">Kilimani, Nairobi, KE</span>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-amber-500 text-[10px]">📞</div>
-                            <span contenteditable="true" class="text-[11px] text-slate-300">+254 744 555 666</span>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500 text-xs shadow-inner">📞</div>
+                            <span contenteditable="true" class="text-[11px] text-slate-300 font-medium">+254 744 555 666</span>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <div class="w-6 h-6 rounded bg-slate-800 flex items-center justify-center text-amber-500 text-[10px]">✉️</div>
-                            <span contenteditable="true" class="text-[11px] text-slate-300">kevin.o@pro-kenya.com</span>
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-8 h-8 rounded-lg bg-slate-800 flex items-center justify-center text-amber-500 text-xs shadow-inner">✉️</div>
+                            <span contenteditable="true" class="text-[11px] text-slate-300 font-medium">kevin.o@pro-kenya.com</span>
                         </div>
                     </div>
                 </section>
 
                 <section>
-                    <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.3em] mb-4 border-b border-white/10 pb-2">Mastery</h2>
-                    <div contenteditable="true" class="flex flex-wrap gap-2">
-                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">Strategic Sourcing</span>
-                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">Budget Management</span>
-                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">SAP / ERP</span>
-                        <span class="text-[9px] bg-slate-800 text-slate-200 px-2 py-1 rounded-sm border border-white/5">Risk Mitigation</span>
+                    <div class="flex justify-between items-center mb-4 border-b border-white/10 pb-2">
+                        <h2 class="text-amber-500 text-[10px] font-black uppercase tracking-[0.4em]">Expertise</h2>
+                        <button onclick="addSkill()" class="no-print text-[9px] bg-amber-500/10 text-amber-500 hover:bg-amber-500 hover:text-slate-900 px-2 py-0.5 rounded transition-colors font-bold">+ ADD</button>
+                    </div>
+                    <div id="skills-container" class="flex flex-wrap gap-2">
+                        <div class="skill-tag flex items-center gap-2 text-[9px] bg-slate-800 text-slate-200 px-3 py-1.5 rounded-md border border-white/5">
+                            <span contenteditable="true">Strategic Sourcing</span>
+                        </div>
+                        <div class="skill-tag flex items-center gap-2 text-[9px] bg-slate-800 text-slate-200 px-3 py-1.5 rounded-md border border-white/5">
+                            <span contenteditable="true">Budget Management</span>
+                        </div>
+                        <div class="skill-tag flex items-center gap-2 text-[9px] bg-slate-800 text-slate-200 px-3 py-1.5 rounded-md border border-white/5">
+                            <span contenteditable="true">SAP / ERP Systems</span>
+                        </div>
+                        <div class="skill-tag flex items-center gap-2 text-[9px] bg-slate-800 text-slate-200 px-3 py-1.5 rounded-md border border-white/5">
+                            <span contenteditable="true">Compliance</span>
+                        </div>
                     </div>
                 </section>
+            </div>
+
+            <div class="mt-auto pt-10 text-[9px] text-slate-500 font-medium uppercase tracking-[0.2em] no-print">
+                ID: KE-9932-O-2026
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="w-full md:w-[65%] p-8 md:p-12">
-            <section class="mb-12">
-                <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-4">
-                    Professional Profile
-                    <span class="h-[1px] bg-slate-100 flex-grow"></span>
+        <main class="main-content w-full md:w-[65%] p-8 md:p-14 bg-white">
+
+            <section class="mb-14">
+                <h2 class="text-[11px] font-black text-amber-500 uppercase tracking-[0.5em] mb-6 flex items-center gap-5">
+                    Executive Summary
+                    <span class="h-[1.5px] bg-slate-100 flex-grow"></span>
                 </h2>
-                <p contenteditable="true" class="text-sm text-slate-600 leading-relaxed text-justify">
-                    A result-oriented Procurement Professional with a decade of experience in the Kenyan logistics and hospitality industries. Expert in managing high-volume supply chains and reducing operational costs through strategic vendor partnerships. Certified member of the <strong class="text-slate-800">Kenya Institute of Supplies Management (KISM)</strong>.
+                <p contenteditable="true" class="text-sm text-slate-600 leading-relaxed text-justify font-medium">
+                    A result-oriented Procurement Professional with a decade of experience in the Kenyan logistics and hospitality industries. Expert in managing high-volume supply chains and reducing operational costs through strategic vendor partnerships. Certified member of the <strong class="text-slate-900">Kenya Institute of Supplies Management (KISM)</strong>.
                 </p>
             </section>
 
-            <section class="mb-12">
-                <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-8 flex items-center gap-4">
-                    Career Progression
-                    <span class="h-[1px] bg-slate-100 flex-grow"></span>
-                </h2>
-                <div class="space-y-10">
-                    <div class="relative pl-6 border-l-2 border-slate-100">
-                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-amber-500 border-4 border-white shadow-sm"></div>
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-baseline mb-3 gap-2">
+            <section class="mb-14">
+                <div class="flex justify-between items-center mb-10">
+                    <h2 class="text-[11px] font-black text-amber-500 uppercase tracking-[0.5em] flex items-center gap-5 flex-grow">
+                        Career Trajectory
+                        <span class="h-[1.5px] bg-slate-100 flex-grow"></span>
+                    </h2>
+                </div>
+
+                <div class="space-y-12">
+                    <!-- Exp Item -->
+                    <div class="relative pl-8 border-l-2 border-slate-100 group">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-amber-500 border-4 border-white shadow-md transition-transform group-hover:scale-125"></div>
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-baseline mb-4 gap-3">
                             <div>
-                                <h3 contenteditable="true" class="text-lg font-bold text-slate-800">Procurement Manager</h3>
-                                <p contenteditable="true" class="text-xs font-medium text-slate-500">Safaricom PLC | Nairobi</p>
+                                <h3 contenteditable="true" class="text-xl font-extrabold text-slate-800 tracking-tight">Procurement Manager</h3>
+                                <p contenteditable="true" class="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">Safaricom PLC | Nairobi Headquarters</p>
                             </div>
-                            <span contenteditable="true" class="text-[10px] font-bold text-amber-600 bg-amber-50 px-3 py-1 rounded-full border border-amber-100 whitespace-nowrap">2021 — PRESENT</span>
+                            <span contenteditable="true" class="text-[10px] font-black text-amber-600 bg-amber-50 px-4 py-1.5 rounded-full border border-amber-100 shadow-sm whitespace-nowrap">2021 — PRESENT</span>
                         </div>
-                        <ul contenteditable="true" class="text-[13px] text-slate-600 space-y-3">
-                            <li class="flex gap-2"><span class="text-amber-500 mt-1">▹</span><span>Managed an annual procurement budget of <strong>KES 500M</strong>.</span></li>
-                            <li class="flex gap-2"><span class="text-amber-500 mt-1">▹</span><span>Spearheaded digital transformation for the supply chain unit.</span></li>
+                        <ul contenteditable="true" class="text-[13px] text-slate-600 space-y-4">
+                            <li class="flex gap-3"><span class="text-amber-500 font-black">/</span><span>Managed an annual procurement budget of <strong>KES 500M</strong> with a verified 12% cost-saving achievement.</span></li>
+                            <li class="flex gap-3"><span class="text-amber-500 font-black">/</span><span>Spearheaded digital transformation, moving to a 100% paperless ERP environment.</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- Exp Item -->
+                    <div class="relative pl-8 border-l-2 border-slate-100 group">
+                        <div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-slate-200 border-4 border-white shadow-sm"></div>
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-baseline mb-4 gap-3">
+                            <div>
+                                <h3 contenteditable="true" class="text-xl font-extrabold text-slate-800 tracking-tight text-opacity-80">Supply Chain Officer</h3>
+                                <p contenteditable="true" class="text-xs font-semibold text-slate-400 mt-1 uppercase tracking-wider">Serena Hotels | Coast Region</p>
+                            </div>
+                            <span contenteditable="true" class="text-[10px] font-black text-slate-500 bg-slate-100 px-4 py-1.5 rounded-full border border-slate-200 whitespace-nowrap">2017 — 2021</span>
+                        </div>
+                        <ul contenteditable="true" class="text-[13px] text-slate-500 space-y-4">
+                            <li class="flex gap-3"><span class="text-amber-500/50 font-black">/</span><span>Coordinated local logistics for fresh produce supply chains across 5 luxury properties.</span></li>
+                            <li class="flex gap-3"><span class="text-amber-500/50 font-black">/</span><span>Reduced stock-out incidents by 30% through predictive inventory modeling.</span></li>
                         </ul>
                     </div>
                 </div>
             </section>
 
             <section>
-                <h2 class="text-xs font-black text-amber-500 uppercase tracking-[0.4em] mb-6 flex items-center gap-4">
-                    Academic Foundation
-                    <span class="h-[1px] bg-slate-100 flex-grow"></span>
+                <h2 class="text-[11px] font-black text-amber-500 uppercase tracking-[0.5em] mb-8 flex items-center gap-5">
+                    Academic Background
+                    <span class="h-[1.5px] bg-slate-100 flex-grow"></span>
                 </h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div contenteditable="true" class="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                        <p class="text-xs font-bold text-amber-600 mb-1">GRADUATED 2019</p>
-                        <p class="font-bold text-slate-800 text-sm">MSc in Procurement & Logistics</p>
+                    <div contenteditable="true" class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm transition-all hover:shadow-md">
+                        <p class="text-[10px] font-black text-amber-600 mb-2 uppercase tracking-widest">Graduated 2019</p>
+                        <p class="font-bold text-slate-800 text-sm mb-1 leading-tight">MSc in Procurement & Logistics Management</p>
                         <p class="text-xs text-slate-500 italic">Jomo Kenyatta University (JKUAT)</p>
                     </div>
-                    <div contenteditable="true" class="bg-slate-50 p-4 rounded-lg border border-slate-100">
-                        <p class="text-xs font-bold text-amber-600 mb-1">GRADUATED 2015</p>
-                        <p class="font-bold text-slate-800 text-sm">Bachelors in Commerce</p>
+                    <div contenteditable="true" class="bg-slate-50 p-6 rounded-2xl border border-slate-100 shadow-sm transition-all hover:shadow-md">
+                        <p class="text-[10px] font-black text-amber-600 mb-2 uppercase tracking-widest">Graduated 2015</p>
+                        <p class="font-bold text-slate-800 text-sm mb-1 leading-tight">Bachelors in Commerce (Finance)</p>
                         <p class="text-xs text-slate-500 italic">University of Nairobi (UoN)</p>
                     </div>
                 </div>
@@ -167,8 +219,8 @@
         </main>
     </div>
 
-    <div class="max-w-5xl mx-auto mt-8 px-4 text-center text-[10px] text-slate-400 uppercase tracking-widest no-print pb-10">
-        Generated by Orlantech Innovations CV Suite &copy; 2026
+    <div class="max-w-5xl mx-auto mt-10 px-4 text-center text-[10px] text-slate-400 uppercase tracking-[0.4em] no-print pb-16">
+        Excellence Through Stewardship &bull; Orlantech Innovations &copy; 2026
     </div>
 
     <script>
@@ -185,6 +237,15 @@
                 };
                 reader.readAsDataURL(file);
             }
+        }
+
+        function addSkill() {
+            const container = document.getElementById('skills-container');
+            const newSkill = document.createElement('div');
+            newSkill.className = 'skill-tag flex items-center gap-2 text-[9px] bg-slate-800 text-slate-200 px-3 py-1.5 rounded-md border border-white/5';
+            newSkill.innerHTML = `<span contenteditable="true">New Skill</span>`;
+            container.appendChild(newSkill);
+            newSkill.querySelector('span').focus();
         }
     </script>
 </body>
